@@ -236,10 +236,11 @@ radial-gradient(1px 1px at 76% 75%,rgba(255,255,255,.35) 0%,transparent 100%);
 <div class="hdr">
   <span class="moon-anim">☪️</span>
   <div class="arabic">رمضان ١٤٤٧</div>
-  <div class="sub">Ramadan 1447 · Houston, TX</div>
-  <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;">
+  <div class="sub" id="appSubtitle">Ramadan 1447 · Locating...</div>
+  <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:4px;">
     <div class="badge" id="badge">Loading...</div>
     <button class="notif-btn" onclick="openNotif()">🔔 Reminders</button>
+    <button class="notif-btn" onclick="refreshLocation()" id="locBtn">📍 Update Location</button>
   </div>
 </div>
 
@@ -269,7 +270,7 @@ radial-gradient(1px 1px at 76% 75%,rgba(255,255,255,.35) 0%,transparent 100%);
       <div class="t-icon">🌙</div>
       <div class="t-lbl">Suhoor Ends</div>
       <div class="t-val" id="sTime">—</div>
-      <div class="t-sub">AM · Fajr begins</div>
+      <div class="t-sub" id="suhoorSub">AM · Fajr begins</div>
     </div>
     <div class="t-block">
       <div class="t-icon">🌅</div>
@@ -453,23 +454,181 @@ radial-gradient(1px 1px at 76% 75%,rgba(255,255,255,.35) 0%,transparent 100%);
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
-var SCHED=[
-  {d:"2026-02-18",n:1,s:"5:51",i:"6:13"},{d:"2026-02-19",n:2,s:"5:50",i:"6:14"},
-  {d:"2026-02-20",n:3,s:"5:49",i:"6:15"},{d:"2026-02-21",n:4,s:"5:48",i:"6:16"},
-  {d:"2026-02-22",n:5,s:"5:47",i:"6:17"},{d:"2026-02-23",n:6,s:"5:46",i:"6:18"},
-  {d:"2026-02-24",n:7,s:"5:44",i:"6:19"},{d:"2026-02-25",n:8,s:"5:43",i:"6:20"},
-  {d:"2026-02-26",n:9,s:"5:42",i:"6:21"},{d:"2026-02-27",n:10,s:"5:40",i:"6:22"},
-  {d:"2026-02-28",n:11,s:"5:39",i:"6:23"},{d:"2026-03-01",n:12,s:"5:38",i:"6:24"},
-  {d:"2026-03-02",n:13,s:"5:36",i:"6:25"},{d:"2026-03-03",n:14,s:"5:35",i:"6:26"},
-  {d:"2026-03-04",n:15,s:"5:33",i:"6:27"},{d:"2026-03-05",n:16,s:"5:32",i:"6:28"},
-  {d:"2026-03-06",n:17,s:"5:30",i:"6:29"},{d:"2026-03-07",n:18,s:"5:28",i:"6:30"},
-  {d:"2026-03-08",n:19,s:"5:27",i:"6:31"},{d:"2026-03-09",n:20,s:"5:25",i:"6:32"},
-  {d:"2026-03-10",n:21,s:"5:23",i:"6:33"},{d:"2026-03-11",n:22,s:"5:22",i:"6:34"},
-  {d:"2026-03-12",n:23,s:"5:20",i:"6:34"},{d:"2026-03-13",n:24,s:"5:18",i:"6:35"},
-  {d:"2026-03-14",n:25,s:"5:16",i:"6:36"},{d:"2026-03-15",n:26,s:"5:14",i:"6:37"},
-  {d:"2026-03-16",n:27,s:"5:13",i:"6:38"},{d:"2026-03-17",n:28,s:"5:11",i:"6:39"},
-  {d:"2026-03-18",n:29,s:"5:09",i:"6:40"},{d:"2026-03-19",n:30,s:"5:07",i:"6:41"}
-];
+// Dynamic schedule — populated from Aladhan API based on user GPS
+var SCHED=[];
+var USER_CITY='Your Location';
+var USER_LAT=null;
+var USER_LON=null;
+
+// Ramadan 2026 dates
+var RAM_START=new Date('2026-02-18');
+var RAM_DAYS=30;
+
+function ramDateStr(dayNum){
+  var d=new Date(RAM_START);
+  d.setDate(d.getDate()+(dayNum-1));
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+// Convert "HH:MM" 24h → "H:MM" for display
+function to12h(t24){
+  if(!t24)return'—';
+  var p=t24.split(':');
+  var h=parseInt(p[0]);
+  var m=p[1];
+  var hh=h>12?h-12:(h===0?12:h);
+  return hh+':'+m;
+}
+
+// Show loading state in times card
+function setTimesLoading(msg){
+  document.getElementById('sTime').textContent='...';
+  document.getElementById('iTime').textContent='...';
+  document.getElementById('durVal').textContent=msg||'Locating...';
+  document.getElementById('durTxt').textContent='';
+  document.getElementById('badge').textContent='Finding your location...';
+}
+
+// Reverse geocode using nominatim (no key needed)
+function getCityName(lat,lon,cb){
+  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var city=data.address.city||data.address.town||data.address.village||data.address.county||'Your City';
+      var country=data.address.country_code?data.address.country_code.toUpperCase():'';
+      cb(city+(country?' · '+country:''));
+    })
+    .catch(function(){cb('Your Location');});
+}
+
+// Fetch full Ramadan calendar from Aladhan for given lat/lon
+function fetchRamadanCalendar(lat,lon){
+  setTimesLoading('Loading prayer times...');
+  // Fetch both Feb and Mar 2026 monthly calendars
+  var months=[
+    {y:2026,m:2},
+    {y:2026,m:3}
+  ];
+  var results={};
+  var done=0;
+
+  months.forEach(function(mo){
+    var url='https://api.aladhan.com/v1/calendar/'+mo.y+'/'+mo.m
+      +'?latitude='+lat+'&longitude='+lon+'&method=2';
+    fetch(url)
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if(data.code===200&&data.data){
+          data.data.forEach(function(day){
+            var greg=day.date.gregorian;
+            var dateStr=greg.year+'-'+String(greg.month.number).padStart(2,'0')+'-'+String(greg.day).padStart(2,'0');
+            results[dateStr]={
+              fajr:day.timings.Fajr.split(' ')[0],
+              maghrib:day.timings.Maghrib.split(' ')[0]
+            };
+          });
+        }
+        done++;
+        if(done===2) buildSchedFromResults(results,lat,lon);
+      })
+      .catch(function(){
+        done++;
+        if(done===2) fallbackSched();
+      });
+  });
+}
+
+function buildSchedFromResults(results,lat,lon){
+  SCHED=[];
+  for(var i=1;i<=RAM_DAYS;i++){
+    var ds=ramDateStr(i);
+    var r=results[ds];
+    if(r){
+      SCHED.push({d:ds,n:i,s:r.fajr,i:r.maghrib});
+    }
+  }
+  if(SCHED.length===0){fallbackSched();return;}
+
+  // Get city name then update UI
+  getCityName(lat,lon,function(city){
+    USER_CITY=city;
+    document.getElementById('appSubtitle').textContent='Ramadan 1447 · '+city;
+    var btn=document.getElementById('locBtn');
+    if(btn)btn.textContent='📍 '+city.split('·')[0].trim();
+    lss('cached_sched',{sched:SCHED,city:city,lat:lat,lon:lon,ts:Date.now()});
+    initHeader();
+    buildSchedule();
+  });
+}
+
+// Fallback to Houston if GPS/API fails
+function fallbackSched(){
+  SCHED=[
+    {d:"2026-02-18",n:1,s:"05:51",i:"18:13"},{d:"2026-02-19",n:2,s:"05:50",i:"18:14"},
+    {d:"2026-02-20",n:3,s:"05:49",i:"18:15"},{d:"2026-02-21",n:4,s:"05:48",i:"18:16"},
+    {d:"2026-02-22",n:5,s:"05:47",i:"18:17"},{d:"2026-02-23",n:6,s:"05:46",i:"18:18"},
+    {d:"2026-02-24",n:7,s:"05:44",i:"18:19"},{d:"2026-02-25",n:8,s:"05:43",i:"18:20"},
+    {d:"2026-02-26",n:9,s:"05:42",i:"18:21"},{d:"2026-02-27",n:10,s:"05:40",i:"18:22"},
+    {d:"2026-02-28",n:11,s:"05:39",i:"18:23"},{d:"2026-03-01",n:12,s:"05:38",i:"18:24"},
+    {d:"2026-03-02",n:13,s:"05:36",i:"18:25"},{d:"2026-03-03",n:14,s:"05:35",i:"18:26"},
+    {d:"2026-03-04",n:15,s:"05:33",i:"18:27"},{d:"2026-03-05",n:16,s:"05:32",i:"18:28"},
+    {d:"2026-03-06",n:17,s:"05:30",i:"18:29"},{d:"2026-03-07",n:18,s:"05:28",i:"18:30"},
+    {d:"2026-03-08",n:19,s:"05:27",i:"18:31"},{d:"2026-03-09",n:20,s:"05:25",i:"18:32"},
+    {d:"2026-03-10",n:21,s:"05:23",i:"18:33"},{d:"2026-03-11",n:22,s:"05:22",i:"18:34"},
+    {d:"2026-03-12",n:23,s:"05:20",i:"18:34"},{d:"2026-03-13",n:24,s:"05:18",i:"18:35"},
+    {d:"2026-03-14",n:25,s:"05:16",i:"18:36"},{d:"2026-03-15",n:26,s:"05:14",i:"18:37"},
+    {d:"2026-03-16",n:27,s:"05:13",i:"18:38"},{d:"2026-03-17",n:28,s:"05:11",i:"18:39"},
+    {d:"2026-03-18",n:29,s:"05:09",i:"18:40"},{d:"2026-03-19",n:30,s:"05:07",i:"18:41"}
+  ];
+  USER_CITY='Houston, TX (fallback)';
+  document.getElementById('appSubtitle').textContent='Ramadan 1447 · Houston, TX';
+  initHeader();
+  buildSchedule();
+}
+
+// Force refresh location (clears cache)
+function refreshLocation(){
+  var btn=document.getElementById('locBtn');
+  if(btn)btn.textContent='📍 Locating...';
+  lss('cached_sched',null);
+  initLocation();
+}
+function initLocation(){
+  // Check cache first
+  var cached=ls('cached_sched',null);
+  var SIX_HOURS=6*60*60*1000;
+  if(cached&&cached.sched&&cached.sched.length>0&&(Date.now()-cached.ts)<SIX_HOURS){
+    SCHED=cached.sched;
+    USER_CITY=cached.city||'Your Location';
+    USER_LAT=cached.lat;
+    USER_LON=cached.lon;
+    document.getElementById('appSubtitle').textContent='Ramadan 1447 · '+USER_CITY;
+    var btn=document.getElementById('locBtn');
+    if(btn)btn.textContent='📍 '+USER_CITY.split('·')[0].trim();
+    initHeader();
+    buildSchedule();
+    return;
+  }
+
+  if(!navigator.geolocation){fallbackSched();return;}
+
+  setTimesLoading('Allow location for accurate times');
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      USER_LAT=pos.coords.latitude;
+      USER_LON=pos.coords.longitude;
+      fetchRamadanCalendar(USER_LAT,USER_LON);
+    },
+    function(err){
+      // Permission denied or error — use fallback
+      fallbackSched();
+    },
+    {timeout:10000,maximumAge:3600000}
+  );
+}
 
 var ITEMS=[
   {id:"suhoor",l:"Suhoor eaten",m:"Pre-dawn"},
@@ -576,7 +735,13 @@ function today(){
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 function mins(t){var p=t.split(':');return+p[0]*60+ +p[1];}
-function fmt(t){var p=t.split(':');var h=+p[0];var m=p[1];var hh=h>12?h-12:(h===0?12:h);return hh+':'+m;}
+function fmt(t){
+  // Handles both "5:51" and "05:51" (24h from API)
+  if(!t||t==='—')return'—';
+  var p=t.split(':');var h=+p[0];var m=String(+p[1]).padStart(2,'0');
+  var hh=h>12?h-12:(h===0?12:h);
+  return hh+':'+m;
+}
 function mday(s){var p=s.split('-');var mo=['','Jan','Feb','Mar'];return mo[+p[1]]+' '+(+p[2]);}
 function ls(k,def){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v):def;}catch(e){return def;}}
 function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
@@ -595,22 +760,30 @@ function initHeader(){
   var pd=document.getElementById('pDay');
   var pf=document.getElementById('pFill');
 
+  // Determine suhoor AM / iftar PM labels
+  var suhoorSub=document.getElementById('suhoorSub');
+  var iftarSub=document.getElementById('iftarSub');
+
   if(e){
     badge.textContent='Day '+e.n+' of Ramadan';
     st.textContent=fmt(e.s);
     it.textContent=fmt(e.i);
+    if(suhoorSub)suhoorSub.textContent='AM · Fajr begins';
+    if(iftarSub)iftarSub.textContent='PM · Maghrib';
     var diff=mins(e.i)-mins(e.s);
     dv.textContent=Math.floor(diff/60)+'h '+diff%60+'m';
     dt.textContent='fasting today';
     pd.textContent=e.n;
     pf.style.width=Math.round(e.n/30*100)+'%';
-  } else if(td<SCHED[0].d){
-    badge.textContent='Ramadan Starts Tomorrow!';
+  } else if(SCHED.length>0&&td<SCHED[0].d){
+    badge.textContent='Ramadan Starts Soon!';
     var f=SCHED[0];
     st.textContent=fmt(f.s);it.textContent=fmt(f.i);
     var d2=mins(f.i)-mins(f.s);
     dv.textContent=Math.floor(d2/60)+'h '+d2%60+'m';dt.textContent='first fast';
     pd.textContent='0';
+  } else if(SCHED.length===0){
+    badge.textContent='Loading...';
   } else {
     badge.textContent='Eid Mubarak! 🎉';
     st.textContent='—';it.textContent='—';dv.textContent='Complete!';dt.textContent='';
@@ -920,6 +1093,9 @@ function buildSchedule(){
   var html='';
   SCHED.forEach(function(r){
     var cls=r.d===td?' today':'';
+    // Determine AM/PM from 24h time
+    var sAMPM=parseInt(r.s)<12?'AM':'AM'; // Fajr always AM
+    var iAMPM='PM'; // Maghrib always PM
     html+='<div class="sched-r'+cls+'">'
       +'<div>'+mday(r.d)+'</div>'
       +'<div class="dn">'+r.n+'</div>'
@@ -927,7 +1103,7 @@ function buildSchedule(){
       +'<div class="if">'+fmt(r.i)+' PM</div>'
       +'</div>';
   });
-  document.getElementById('schedRows').innerHTML=html;
+  document.getElementById('schedRows').innerHTML=html||'<div style="padding:16px;text-align:center;color:rgba(240,234,214,.4);font-size:12px;">Allow location to load your prayer schedule</div>';
 }
 
 // ═══════════════════════════════════════════
@@ -1013,7 +1189,7 @@ function goTab(name){
 // ═══════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════
-initHeader();
+initLocation();   // GPS → Aladhan API → initHeader + buildSchedule
 updateCountdown();
 setInterval(updateCountdown,1000);
 buildL10();
