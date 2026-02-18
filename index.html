@@ -6,93 +6,156 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ramadan">
+<meta name="apple-mobile-web-app-title" content="Ramadan 1447">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0A0D1A">
-<title>Ramadan 1447</title>
+<title>Ramadan 1447 · Ahmad</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
 html{height:-webkit-fill-available;}
 body{
   background:#0A0D1A;
   color:#F0EAD6;
-  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
-  min-height:100vh;
-  min-height:-webkit-fill-available;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;
   min-height:100dvh;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
-.safe-wrap{
+.safe{
   padding-top:env(safe-area-inset-top,20px);
-  padding-bottom:calc(env(safe-area-inset-bottom,20px) + 80px);
-  padding-left:env(safe-area-inset-left,0px);
-  padding-right:env(safe-area-inset-right,0px);
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 76px);
 }
 .app{max-width:430px;margin:0 auto;padding:0 16px;}
 
-/* HEADER */
-.hdr{padding:28px 0 18px;text-align:center;border-bottom:1px solid rgba(201,168,76,.2);margin-bottom:18px;}
-.moon-icon{font-size:2.2rem;display:block;margin-bottom:6px;}
-.arabic{font-size:2rem;color:#C9A84C;line-height:1.2;font-family:Georgia,‘Times New Roman’,serif;}
-.sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-top:4px;}
-.badge{display:inline-block;margin-top:12px;background:linear-gradient(135deg,#C9A84C,#E8C97A);color:#0A0D1A;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 18px;border-radius:20px;}
+/* ── STARS BG ── */
+body::before{
+content:’’;position:fixed;inset:0;pointer-events:none;z-index:0;
+background:
+radial-gradient(ellipse 130% 50% at 50% -5%,rgba(201,168,76,.1) 0%,transparent 60%),
+radial-gradient(1px 1px at 15% 12%,rgba(255,255,255,.7) 0%,transparent 100%),
+radial-gradient(1px 1px at 82% 8%,rgba(255,255,255,.6) 0%,transparent 100%),
+radial-gradient(1.5px 1.5px at 42% 20%,rgba(255,255,255,.5) 0%,transparent 100%),
+radial-gradient(1px 1px at 68% 35%,rgba(255,255,255,.4) 0%,transparent 100%),
+radial-gradient(1px 1px at 8% 50%,rgba(255,255,255,.35) 0%,transparent 100%),
+radial-gradient(1px 1px at 93% 55%,rgba(255,255,255,.4) 0%,transparent 100%),
+radial-gradient(1px 1px at 55% 5%,rgba(255,255,255,.6) 0%,transparent 100%),
+radial-gradient(1px 1px at 28% 70%,rgba(255,255,255,.3) 0%,transparent 100%),
+radial-gradient(1px 1px at 76% 75%,rgba(255,255,255,.35) 0%,transparent 100%);
+}
+.app{position:relative;z-index:1;}
 
-/* CARDS */
+/* ── HEADER ── */
+.hdr{padding:28px 0 16px;text-align:center;border-bottom:1px solid rgba(201,168,76,.2);margin-bottom:16px;}
+.moon-anim{font-size:2.4rem;display:block;margin-bottom:6px;animation:moonGlow 3s ease-in-out infinite alternate;}
+@keyframes moonGlow{from{filter:drop-shadow(0 0 4px rgba(201,168,76,.3));}to{filter:drop-shadow(0 0 16px rgba(201,168,76,.8));}}
+.arabic{font-size:2rem;color:#C9A84C;line-height:1.2;font-family:Georgia,‘Times New Roman’,serif;}
+.sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-top:3px;}
+.badge{display:inline-block;margin-top:10px;background:linear-gradient(135deg,#C9A84C,#E8C97A);color:#0A0D1A;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 18px;border-radius:20px;}
+.notif-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;margin-left:8px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#E8C97A;font-size:11px;padding:6px 14px;border-radius:20px;cursor:pointer;-webkit-appearance:none;}
+
+/* ── CARDS ── */
 .card{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:20px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
 .card-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);}
 
-/* TIMES */
+/* ── EID COUNTDOWN ── */
+.eid-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px;}
+.eid-cell{text-align:center;background:rgba(255,255,255,.03);border-radius:12px;padding:10px 4px;border:1px solid rgba(201,168,76,.12);}
+.eid-num{font-size:1.6rem;color:#E8C97A;font-family:Georgia,serif;line-height:1;}
+.eid-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-top:3px;}
+.eid-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+
+/* ── LAST 10 NIGHTS ── */
+.l10-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px;}
+.l10-night{text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;-webkit-user-select:none;}
+.l10-night.qadr{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.4);}
+.l10-night.done{background:rgba(76,175,122,.15);border-color:rgba(76,175,122,.4);}
+.l10-night.today-night{border-color:#C9A84C;box-shadow:0 0 8px rgba(201,168,76,.3);}
+.l10-date{font-size:11px;color:#E8C97A;font-weight:600;}
+.l10-mar{font-size:9px;color:rgba(240,234,214,.4);margin-top:1px;}
+.l10-star{font-size:10px;margin-top:2px;}
+
+/* ── TIMES ── */
 .times-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .t-block{text-align:center;padding:14px 8px;background:rgba(255,255,255,.03);border-radius:14px;border:1px solid rgba(255,255,255,.06);}
 .t-icon{font-size:1.4rem;margin-bottom:4px;}
 .t-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-bottom:6px;}
 .t-val{font-size:2rem;color:#E8C97A;line-height:1;font-family:Georgia,serif;}
-.t-ampm{font-size:12px;color:rgba(240,234,214,.5);margin-left:2px;}
 .t-sub{font-size:10px;color:rgba(240,234,214,.4);margin-top:4px;}
 .dur{text-align:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,168,76,.15);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.45);}
 .dur-val{color:#C9A84C;font-size:15px;font-weight:600;}
 
-/* PROGRESS */
+/* ── PROGRESS ── */
 .prog-hdr{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-bottom:10px;}
-.prog-hdr b{color:#C9A84C;font-weight:600;}
+.prog-hdr b{color:#C9A84C;font-weight:700;}
 .prog-track{background:rgba(255,255,255,.06);border-radius:8px;height:8px;overflow:hidden;}
 .prog-fill{height:100%;background:linear-gradient(90deg,#C9A84C,#E8C97A);border-radius:8px;transition:width .8s ease;}
-.prog-marks{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:rgba(240,234,214,.35);}
+.prog-marks{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:rgba(240,234,214,.3);}
 
-/* BOTTOM NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,17,30,.95);border-top:1px solid rgba(201,168,76,.15);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);z-index:100;}
-.nav-btn{flex:1;background:none;border:none;color:rgba(240,234,214,.4);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:12px 4px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;-webkit-appearance:none;}
+/* ── HADITH ── */
+.hadith-text{font-size:14px;color:#F0EAD6;line-height:1.7;font-style:italic;text-align:center;padding:4px 0;}
+.hadith-src{font-size:10px;color:#C9A84C;text-align:center;margin-top:8px;letter-spacing:1px;}
+.hadith-nav{display:flex;justify-content:center;gap:12px;margin-top:12px;}
+.hadith-btn{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);color:#E8C97A;font-size:12px;padding:7px 18px;border-radius:10px;cursor:pointer;-webkit-appearance:none;}
+
+/* ── BOTTOM NAV ── */
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,13,26,.96);border-top:1px solid rgba(201,168,76,.15);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);z-index:100;}
+.nav-btn{flex:1;background:none;border:none;color:rgba(240,234,214,.35);font-size:9px;letter-spacing:.5px;text-transform:uppercase;padding:10px 2px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;-webkit-appearance:none;transition:color .15s;}
 .nav-btn.active{color:#E8C97A;}
-.nav-btn .nav-dot{width:4px;height:4px;border-radius:2px;background:#E8C97A;opacity:0;}
+.nav-icon{font-size:1.35rem;}
+.nav-dot{width:4px;height:4px;border-radius:2px;background:#E8C97A;opacity:0;margin-top:1px;}
 .nav-btn.active .nav-dot{opacity:1;}
-.nav-icon{font-size:1.3rem;}
 
-/* PANELS */
+/* ── PANELS ── */
 .panel{display:none;}.panel.active{display:block;}
-
-/* CHECKLIST */
 .sec-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,234,214,.35);margin-bottom:10px;padding-left:2px;}
-.chk{display:flex;align-items:center;gap:12px;background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:background .15s,border .15s;-webkit-user-select:none;user-select:none;}
+
+/* ── CHECKLIST ── */
+.chk{display:flex;align-items:center;gap:12px;background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:13px 14px;margin-bottom:8px;cursor:pointer;-webkit-user-select:none;transition:background .15s,border .15s;}
 .chk.done{background:rgba(76,175,122,.07);border-color:rgba(76,175,122,.3);}
 .chk-box{width:24px;height:24px;border-radius:7px;border:1.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:all .15s;}
 .chk.done .chk-box{background:#4CAF7A;border-color:#4CAF7A;color:#fff;}
 .chk-lbl{font-size:14px;flex:1;}
 .chk.done .chk-lbl{color:rgba(240,234,214,.4);text-decoration:line-through;text-decoration-color:rgba(76,175,122,.4);}
 .chk-meta{font-size:11px;color:rgba(240,234,214,.35);flex-shrink:0;}
-.reset-btn{width:100%;margin-top:8px;background:none;border:1px solid rgba(201,168,76,.18);border-radius:12px;color:rgba(240,234,214,.4);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:12px;cursor:pointer;-webkit-appearance:none;}
+.reset-btn{width:100%;margin-top:8px;background:none;border:1px solid rgba(201,168,76,.2);border-radius:12px;color:rgba(240,234,214,.4);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:12px;cursor:pointer;-webkit-appearance:none;}
 
-/* QURAN */
+/* ── TASBIH ── */
+.tasbih-wrap{text-align:center;padding:10px 0;}
+.tasbih-circle{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:2px solid rgba(201,168,76,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;cursor:pointer;-webkit-user-select:none;transition:transform .1s,box-shadow .1s;box-shadow:0 0 20px rgba(201,168,76,.1);}
+.tasbih-circle:active{transform:scale(.95);box-shadow:0 0 30px rgba(201,168,76,.25);}
+.tasbih-count{font-size:3.5rem;color:#E8C97A;font-family:Georgia,serif;line-height:1;}
+.tasbih-lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-top:4px;}
+.tasbih-phrase{font-family:Georgia,serif;font-size:1.1rem;color:#C9A84C;margin-bottom:8px;direction:rtl;}
+.tasbih-en{font-size:12px;color:rgba(240,234,214,.5);margin-bottom:16px;}
+.tasbih-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.tsb-btn{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:#E8C97A;font-size:11px;padding:8px 14px;border-radius:10px;cursor:pointer;-webkit-appearance:none;}
+.tsb-btn.active-phrase{background:rgba(201,168,76,.25);border-color:#C9A84C;}
+.tasbih-progress{margin-top:12px;}
+.tsb-milestones{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.tsb-ms{font-size:11px;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:rgba(240,234,214,.4);}
+.tsb-ms.hit{background:rgba(201,168,76,.2);border-color:#C9A84C;color:#E8C97A;}
+
+/* ── QURAN ── */
 .q-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
 .q-stat{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:14px 8px;text-align:center;}
 .q-stat-v{font-size:1.8rem;color:#C9A84C;line-height:1;font-family:Georgia,serif;}
 .q-stat-l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-top:4px;}
 .juz-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:12px;}
-.juz{border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(240,234,214,.45);cursor:pointer;padding:6px 0;-webkit-user-select:none;user-select:none;transition:all .15s;}
+.juz{border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(240,234,214,.45);cursor:pointer;padding:6px 0;-webkit-user-select:none;transition:all .15s;}
 .juz.done{background:rgba(201,168,76,.2);border-color:#C9A84C;color:#E8C97A;font-weight:600;}
 .hint{font-size:11px;color:rgba(240,234,214,.35);text-align:center;}
 
-/* SCHEDULE */
+/* ── DUAS ── */
+.dua-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.dua-cat-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(240,234,214,.5);font-size:11px;padding:7px 12px;border-radius:10px;cursor:pointer;-webkit-appearance:none;white-space:nowrap;}
+.dua-cat-btn.active{background:rgba(201,168,76,.2);border-color:#C9A84C;color:#E8C97A;}
+.dua-card{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:18px;margin-bottom:10px;}
+.dua-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:12px;}
+.dua-ar{font-family:Georgia,‘Times New Roman’,serif;font-size:1.2rem;color:#E8C97A;text-align:right;line-height:1.8;direction:rtl;margin-bottom:8px;padding-right:4px;}
+.dua-tr{font-size:11px;color:rgba(240,234,214,.5);font-style:italic;margin-bottom:6px;line-height:1.6;}
+.dua-en{font-size:13px;color:#F0EAD6;line-height:1.6;}
+
+/* ── SCHEDULE ── */
 .sched-wrap{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:16px;overflow:hidden;}
 .sched-h{display:grid;grid-template-columns:2fr 1.2fr 1.4fr 1.4fr;padding:10px 14px;background:rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.15);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.4);}
 .sched-r{display:grid;grid-template-columns:2fr 1.2fr 1.4fr 1.4fr;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;align-items:center;}
@@ -102,38 +165,102 @@ body{
 .sched-r .sh{color:#A8D5C0;}
 .sched-r .if{color:#F5C07A;}
 
-/* DUAS */
-.dua-card{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:18px;margin-bottom:10px;}
-.dua-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:12px;text-align:center;}
-.dua-ar{font-family:Georgia,‘Times New Roman’,serif;font-size:1.3rem;color:#E8C97A;text-align:center;line-height:1.8;direction:rtl;margin-bottom:8px;}
-.dua-tr{font-size:11px;color:rgba(240,234,214,.5);text-align:center;font-style:italic;margin-bottom:6px;}
-.dua-en{font-size:12px;color:#F0EAD6;text-align:center;line-height:1.6;}
+/* ── MEAL PLANNER ── */
+.meal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px;}
+.meal-day-btn{text-align:center;padding:8px 2px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);cursor:pointer;-webkit-user-select:none;}
+.meal-day-btn.active{background:rgba(201,168,76,.2);border-color:#C9A84C;}
+.meal-day-btn .mdb-d{font-size:9px;color:rgba(240,234,214,.4);text-transform:uppercase;letter-spacing:1px;}
+.meal-day-btn .mdb-n{font-size:13px;color:#E8C97A;font-weight:600;margin-top:2px;}
+.meal-section{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:16px;margin-bottom:10px;}
+.meal-sect-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.meal-input-row{display:flex;gap:8px;margin-bottom:8px;}
+.meal-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#F0EAD6;font-size:14px;padding:10px 12px;-webkit-appearance:none;outline:none;}
+.meal-input::placeholder{color:rgba(240,234,214,.3);}
+.meal-add-btn{background:rgba(201,168,76,.2);border:1px solid rgba(201,168,76,.4);color:#E8C97A;font-size:18px;width:40px;border-radius:10px;cursor:pointer;-webkit-appearance:none;flex-shrink:0;}
+.meal-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.meal-item:last-child{border-bottom:none;}
+.meal-del{background:none;border:none;color:rgba(240,234,214,.3);font-size:16px;cursor:pointer;flex-shrink:0;padding:0 4px;}
+.meal-item-txt{font-size:13px;color:#F0EAD6;flex:1;}
 
-/* REMINDERS */
-.rem-card{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:16px;margin-bottom:10px;}
-.rem-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;}
-.rem-r{font-size:13px;color:#F0EAD6;display:flex;gap:10px;line-height:1.6;margin-bottom:7px;align-items:flex-start;}
-.rem-r span{color:#C9A84C;flex-shrink:0;}
+/* ── SHOPPING ── */
+.shop-input-row{display:flex;gap:8px;margin-bottom:12px;}
+.shop-item{display:flex;align-items:center;gap:10px;background:#141929;border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer;-webkit-user-select:none;}
+.shop-item.got{background:rgba(76,175,122,.06);border-color:rgba(76,175,122,.25);}
+.shop-box{width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.shop-item.got .shop-box{background:#4CAF7A;border-color:#4CAF7A;color:#fff;}
+.shop-txt{font-size:13px;flex:1;}
+.shop-item.got .shop-txt{color:rgba(240,234,214,.4);text-decoration:line-through;}
+.shop-del{background:none;border:none;color:rgba(240,234,214,.3);font-size:15px;cursor:pointer;padding:0 4px;}
+.shop-clear{width:100%;margin-top:8px;background:none;border:1px solid rgba(224,123,90,.3);border-radius:10px;color:rgba(224,123,90,.7);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:10px;cursor:pointer;-webkit-appearance:none;}
 
-/* FOOTER */
-.foot{text-align:center;padding:20px 0 10px;font-size:10px;letter-spacing:1.5px;color:rgba(240,234,214,.25);text-transform:uppercase;}
+/* ── ZAKAT ── */
+.zakat-form{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.z-row{background:#141929;border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:14px;}
+.z-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,234,214,.4);margin-bottom:6px;}
+.z-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#F0EAD6;font-size:16px;padding:10px 12px;-webkit-appearance:none;outline:none;}
+.z-input::placeholder{color:rgba(240,234,214,.25);}
+.z-result{background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.35);border-radius:16px;padding:20px;text-align:center;}
+.z-amount{font-size:2.5rem;color:#E8C97A;font-family:Georgia,serif;line-height:1;}
+.z-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,234,214,.5);margin-top:6px;}
+.z-note{font-size:11px;color:rgba(240,234,214,.4);line-height:1.6;margin-top:10px;text-align:left;}
+.z-nisab{font-size:11px;color:rgba(240,234,214,.4);line-height:1.6;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.06);}
+.z-calc-btn{width:100%;background:linear-gradient(135deg,#C9A84C,#E8C97A);color:#0A0D1A;font-size:14px;font-weight:700;letter-spacing:1px;padding:14px;border-radius:14px;border:none;cursor:pointer;-webkit-appearance:none;margin-top:4px;}
+
+/* ── NOTIF MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal{background:#141929;border:1px solid rgba(201,168,76,.25);border-radius:24px 24px 0 0;padding:24px 20px;width:100%;max-width:430px;margin:0 auto;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));}
+.modal-t{font-size:16px;font-weight:600;color:#E8C97A;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:rgba(240,234,214,.5);margin-bottom:18px;line-height:1.5;}
+.modal-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.modal-row:last-of-type{border-bottom:none;}
+.modal-row-lbl{font-size:14px;color:#F0EAD6;}
+.modal-row-sub{font-size:11px;color:rgba(240,234,214,.4);margin-top:2px;}
+.toggle{width:50px;height:28px;border-radius:14px;background:rgba(255,255,255,.1);border:none;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:#4CAF7A;}
+.toggle::after{content:’’;position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff;transition:transform .2s;}
+.toggle.on::after{transform:translateX(22px);}
+.modal-close{width:100%;margin-top:16px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#E8C97A;font-size:14px;padding:14px;border-radius:14px;cursor:pointer;-webkit-appearance:none;}
+
+/* ── FOOTER ── */
+.foot{text-align:center;padding:20px 0 10px;font-size:10px;letter-spacing:1.5px;color:rgba(240,234,214,.2);text-transform:uppercase;}
 </style>
 
 </head>
 <body>
-<div class="safe-wrap">
+<div class="safe">
 <div class="app">
 
 <!-- HEADER -->
 
 <div class="hdr">
-  <span class="moon-icon">☪️</span>
+  <span class="moon-anim">☪️</span>
   <div class="arabic">رمضان ١٤٤٧</div>
   <div class="sub">Ramadan 1447 · Houston, TX</div>
-  <div class="badge" id="badge">Loading...</div>
+  <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;">
+    <div class="badge" id="badge">Loading...</div>
+    <button class="notif-btn" onclick="openNotif()">🔔 Reminders</button>
+  </div>
 </div>
 
-<!-- TIMES -->
+<!-- EID COUNTDOWN -->
+
+<div class="card">
+  <div class="card-line"></div>
+  <div class="eid-title">🌙 Ramadan Progress &amp; Eid Countdown</div>
+  <div class="eid-row">
+    <div class="eid-cell"><div class="eid-num" id="eD">—</div><div class="eid-lbl">Days</div></div>
+    <div class="eid-cell"><div class="eid-num" id="eH">—</div><div class="eid-lbl">Hours</div></div>
+    <div class="eid-cell"><div class="eid-num" id="eM">—</div><div class="eid-lbl">Mins</div></div>
+    <div class="eid-cell"><div class="eid-num" id="eS">—</div><div class="eid-lbl">Secs</div></div>
+  </div>
+  <div style="font-size:10px;text-align:center;color:rgba(240,234,214,.35);margin-top:6px;letter-spacing:1px;">Until Eid al-Fitr · ~Mar 20, 2026</div>
+  <div class="prog-hdr" style="margin-top:14px;margin-bottom:8px;"><span>Ramadan</span><span><b id="pDay">0</b> / 30 days</span></div>
+  <div class="prog-track"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+  <div class="prog-marks"><span>Day 1</span><span>Day 10</span><span>Day 20</span><span>Eid</span></div>
+</div>
+
+<!-- TODAY'S TIMES -->
 
 <div class="card">
   <div class="card-line"></div>
@@ -154,13 +281,29 @@ body{
   <div class="dur"><span class="dur-val" id="durVal">—</span> <span id="durTxt">fasting today</span></div>
 </div>
 
-<!-- PROGRESS -->
+<!-- HADITH OF THE DAY -->
+
+<div class="card" id="hadithCard">
+  <div class="card-line"></div>
+  <div class="eid-title">📿 Hadith of the Day</div>
+  <div class="hadith-text" id="hadithText"></div>
+  <div class="hadith-src" id="hadithSrc"></div>
+  <div class="hadith-nav">
+    <button class="hadith-btn" onclick="prevHadith()">← Prev</button>
+    <button class="hadith-btn" onclick="nextHadith()">Next →</button>
+  </div>
+</div>
+
+<!-- LAST 10 NIGHTS -->
 
 <div class="card">
-  <div class="prog-hdr"><span>Ramadan Progress</span><span><b id="pDay">0</b> / 30 days</span></div>
-  <div class="prog-track"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
-  <div class="prog-marks"><span>Day 1</span><span>Day 10</span><span>Day 20</span><span>Day 30</span></div>
+  <div class="card-line"></div>
+  <div class="eid-title">✨ Last 10 Nights Tracker</div>
+  <div style="font-size:11px;color:rgba(240,234,214,.4);margin-bottom:8px;">Tap each night to mark your ibadah complete. ⭐ = Laylatul Qadr nights</div>
+  <div class="l10-grid" id="l10Grid"></div>
 </div>
+
+<!-- PANELS -->
 
 <!-- PANEL: DAILY -->
 
@@ -168,6 +311,29 @@ body{
   <div class="sec-lbl">Today's Ibadah Checklist</div>
   <div id="chklist"></div>
   <button class="reset-btn" onclick="resetDay()">↺ Reset for new day</button>
+</div>
+
+<!-- PANEL: DUAS -->
+
+<div class="panel" id="p-duas">
+  <div class="dua-cats" id="duaCats"></div>
+  <div id="duaList"></div>
+</div>
+
+<!-- PANEL: MEALS -->
+
+<div class="panel" id="p-meals">
+  <div class="sec-lbl">Weekly Meal Planner</div>
+  <div class="meal-week" id="mealWeek"></div>
+  <div id="mealDayContent"></div>
+  <div style="height:16px;"></div>
+  <div class="sec-lbl">🛒 Shopping List</div>
+  <div class="shop-input-row">
+    <input class="meal-input" id="shopInput" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShopItem()">
+    <button class="meal-add-btn" onclick="addShopItem()">+</button>
+  </div>
+  <div id="shopList"></div>
+  <button class="shop-clear" onclick="clearGotItems()">Clear checked items</button>
 </div>
 
 <!-- PANEL: QURAN -->
@@ -180,6 +346,50 @@ body{
   </div>
   <div class="juz-grid" id="juzGrid"></div>
   <div class="hint">Tap each Juz to mark complete</div>
+  <div style="height:16px;"></div>
+  <!-- TASBIH -->
+  <div class="sec-lbl">📿 Tasbih Counter</div>
+  <div class="tasbih-wrap">
+    <div class="tasbih-btns" style="margin-bottom:12px;" id="tsbPhrases"></div>
+    <div class="tasbih-phrase" id="tsbPhrase">سُبْحَانَ اللَّهِ</div>
+    <div class="tasbih-en" id="tsbEn">SubhanAllah</div>
+    <div class="tasbih-circle" onclick="tapTasbih()">
+      <div class="tasbih-count" id="tsbCount">0</div>
+      <div class="tasbih-lbl">Tap to count</div>
+    </div>
+    <div class="tsb-milestones" id="tsbMs"></div>
+    <div class="tasbih-btns" style="margin-top:12px;">
+      <button class="tsb-btn" onclick="resetTasbih()">↺ Reset</button>
+      <button class="tsb-btn" onclick="resetAllTasbih()">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: ZAKAT -->
+
+<div class="panel" id="p-zakat">
+  <div class="z-nisab">
+    <b style="color:#C9A84C;">Nisab 2026 (approx):</b> Gold (85g) ≈ $7,480 · Silver (595g) ≈ $560<br>
+    Zakat is due if your total wealth held for 1 lunar year exceeds the Nisab.
+  </div>
+  <div style="height:12px;"></div>
+  <div class="zakat-form">
+    <div class="z-row"><div class="z-lbl">💰 Cash & Bank Savings ($)</div><input class="z-input" id="zCash" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+    <div class="z-row"><div class="z-lbl">📈 Investments & Stocks ($)</div><input class="z-input" id="zInvest" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+    <div class="z-row"><div class="z-lbl">🏠 Rental Income Saved ($)</div><input class="z-input" id="zRental" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+    <div class="z-row"><div class="z-lbl">💍 Gold & Silver Value ($)</div><input class="z-input" id="zGold" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+    <div class="z-row"><div class="z-lbl">📦 Business Inventory ($)</div><input class="z-input" id="zBiz" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+    <div class="z-row"><div class="z-lbl">➖ Debts Owed by You ($)</div><input class="z-input" id="zDebt" type="number" placeholder="0.00" oninput="calcZakat()"></div>
+  </div>
+  <div class="z-result" id="zakatResult">
+    <div class="z-amount" id="zAmount">$0.00</div>
+    <div class="z-label">Zakat Due (2.5%)</div>
+    <div class="z-note" id="zNote"></div>
+  </div>
+  <div style="height:10px;"></div>
+  <div class="z-nisab" style="margin-top:4px;font-size:11px;color:rgba(240,234,214,.4);">
+    ⚠️ This is a guide only. Consult a qualified scholar for your specific situation. Zakat on business assets, real estate investments, and 401k may vary by ruling.
+  </div>
 </div>
 
 <!-- PANEL: SCHEDULE -->
@@ -191,43 +401,6 @@ body{
   </div>
 </div>
 
-<!-- PANEL: DUAS -->
-
-<div class="panel" id="p-duas">
-  <div class="dua-card">
-    <div class="dua-t">🌙 Suhoor Niyyah</div>
-    <div class="dua-ar">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</div>
-    <div class="dua-tr">Wa bisawmi ghadin nawaitu min shahri Ramadan</div>
-    <div class="dua-en">"I intend to keep the fast tomorrow in the month of Ramadan."</div>
-  </div>
-  <div class="dua-card">
-    <div class="dua-t">🌅 Iftar Du'a</div>
-    <div class="dua-ar">اللَّهُمَّ اِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</div>
-    <div class="dua-tr">Allahumma inni laka sumtu wa bika amantu wa 'alaika tawakkaltu wa 'ala rizqika aftartu</div>
-    <div class="dua-en">"O Allah, I fasted for You, I believe in You, I put my trust in You, and I break my fast with Your sustenance."</div>
-  </div>
-  <div class="dua-card">
-    <div class="dua-t">✨ Laylatul Qadr Du'a</div>
-    <div class="dua-ar">اللَّهُمَّ إِنَّكَ عُفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</div>
-    <div class="dua-tr">Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni</div>
-    <div class="dua-en">"O Allah, You are Pardoning and You love pardon, so pardon me."</div>
-  </div>
-  <div class="rem-card">
-    <div class="rem-t">🍽 Suhoor Meal Ideas</div>
-    <div class="rem-r"><span>▸</span>Oats + dates + banana — slow energy, prevents mid-fast hunger</div>
-    <div class="rem-r"><span>▸</span>Eggs + whole wheat toast + avocado — protein-heavy, sustaining</div>
-    <div class="rem-r"><span>▸</span>Greek yogurt + honey + nuts + fruit</div>
-    <div class="rem-r"><span>▸</span>Drink 2–3 glasses of water. Avoid salt & caffeine.</div>
-  </div>
-  <div class="rem-card">
-    <div class="rem-t">✨ Last 10 Nights — Mar 10–19</div>
-    <div class="rem-r"><span>▸</span>Laylatul Qadr: odd nights — Mar 11, 13, 15, 17, 19</div>
-    <div class="rem-r"><span>▸</span>Increase i'tikaf, tahajjud, Quran recitation & du'a</div>
-    <div class="rem-r"><span>▸</span>Recite the Laylatul Qadr du'a repeatedly all night</div>
-    <div class="rem-r"><span>▸</span>Eid al-Fitr: ~Thursday, March 20, 2026 🎉</div>
-  </div>
-</div>
-
 <div class="foot">رمضان مبارك · Ahmad · Houston, TX · 1447 AH</div>
 </div>
 </div>
@@ -235,52 +408,67 @@ body{
 <!-- BOTTOM NAV -->
 
 <nav class="nav">
-  <button class="nav-btn active" id="nb-daily" onclick="goTab('daily')">
-    <span class="nav-icon">☑️</span><span>Daily</span><div class="nav-dot"></div>
-  </button>
-  <button class="nav-btn" id="nb-quran" onclick="goTab('quran')">
-    <span class="nav-icon">📖</span><span>Qur'an</span><div class="nav-dot"></div>
-  </button>
-  <button class="nav-btn" id="nb-schedule" onclick="goTab('schedule')">
-    <span class="nav-icon">📅</span><span>Schedule</span><div class="nav-dot"></div>
-  </button>
-  <button class="nav-btn" id="nb-duas" onclick="goTab('duas')">
-    <span class="nav-icon">🤲</span><span>Du'as</span><div class="nav-dot"></div>
-  </button>
+  <button class="nav-btn active" id="nb-daily" onclick="goTab('daily')"><span class="nav-icon">☑️</span><span>Daily</span><div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-duas" onclick="goTab('duas')"><span class="nav-icon">🤲</span><span>Du'as</span><div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-meals" onclick="goTab('meals')"><span class="nav-icon">🍽</span><span>Meals</span><div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-quran" onclick="goTab('quran')"><span class="nav-icon">📖</span><span>Qur'an</span><div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-zakat" onclick="goTab('zakat')"><span class="nav-icon">🕌</span><span>Zakat</span><div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-schedule" onclick="goTab('schedule')"><span class="nav-icon">📅</span><span>Times</span><div class="nav-dot"></div></button>
 </nav>
 
+<!-- NOTIFICATIONS MODAL -->
+
+<div class="modal-overlay" id="notifModal" onclick="if(event.target===this)closeNotif()">
+  <div class="modal">
+    <div class="modal-t">🔔 Prayer Reminders</div>
+    <div class="modal-sub">Enable browser notifications for Suhoor, Iftar and prayer times. You must allow notifications when prompted.</div>
+    <div class="modal-row">
+      <div><div class="modal-row-lbl">Suhoor Alert</div><div class="modal-row-sub" id="suhoorNotifSub">30 min before Fajr</div></div>
+      <button class="toggle" id="tog-suhoor" onclick="toggleNotif('suhoor')"></button>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-row-lbl">Iftar Alert</div><div class="modal-row-sub" id="iftarNotifSub">At Maghrib time</div></div>
+      <button class="toggle" id="tog-iftar" onclick="toggleNotif('iftar')"></button>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-row-lbl">Fajr Reminder</div><div class="modal-row-sub">At Fajr time daily</div></div>
+      <button class="toggle" id="tog-fajr" onclick="toggleNotif('fajr')"></button>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-row-lbl">Dhuhr Reminder</div><div class="modal-row-sub">~12:45 PM daily</div></div>
+      <button class="toggle" id="tog-dhuhr" onclick="toggleNotif('dhuhr')"></button>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-row-lbl">Asr Reminder</div><div class="modal-row-sub">~4:00 PM daily</div></div>
+      <button class="toggle" id="tog-asr" onclick="toggleNotif('asr')"></button>
+    </div>
+    <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:12px;margin-top:12px;font-size:11px;color:rgba(240,234,214,.45);line-height:1.6;">
+      📱 <b style="color:#C9A84C;">iPhone tip:</b> For reliable daily alerts, set alarms manually in the Clock app — iOS limits background web notifications. Go to <b style="color:#E8C97A;">Clock → Alarm</b> and add alerts for your Suhoor and Iftar times shown above.
+    </div>
+    <button class="modal-close" onclick="closeNotif()">Done</button>
+  </div>
+</div>
+
 <script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
 var SCHED=[
-  {d:"2026-02-18",n:1,s:"5:51",i:"6:13"},
-  {d:"2026-02-19",n:2,s:"5:50",i:"6:14"},
-  {d:"2026-02-20",n:3,s:"5:49",i:"6:15"},
-  {d:"2026-02-21",n:4,s:"5:48",i:"6:16"},
-  {d:"2026-02-22",n:5,s:"5:47",i:"6:17"},
-  {d:"2026-02-23",n:6,s:"5:46",i:"6:18"},
-  {d:"2026-02-24",n:7,s:"5:44",i:"6:19"},
-  {d:"2026-02-25",n:8,s:"5:43",i:"6:20"},
-  {d:"2026-02-26",n:9,s:"5:42",i:"6:21"},
-  {d:"2026-02-27",n:10,s:"5:40",i:"6:22"},
-  {d:"2026-02-28",n:11,s:"5:39",i:"6:23"},
-  {d:"2026-03-01",n:12,s:"5:38",i:"6:24"},
-  {d:"2026-03-02",n:13,s:"5:36",i:"6:25"},
-  {d:"2026-03-03",n:14,s:"5:35",i:"6:26"},
-  {d:"2026-03-04",n:15,s:"5:33",i:"6:27"},
-  {d:"2026-03-05",n:16,s:"5:32",i:"6:28"},
-  {d:"2026-03-06",n:17,s:"5:30",i:"6:29"},
-  {d:"2026-03-07",n:18,s:"5:28",i:"6:30"},
-  {d:"2026-03-08",n:19,s:"5:27",i:"6:31"},
-  {d:"2026-03-09",n:20,s:"5:25",i:"6:32"},
-  {d:"2026-03-10",n:21,s:"5:23",i:"6:33"},
-  {d:"2026-03-11",n:22,s:"5:22",i:"6:34"},
-  {d:"2026-03-12",n:23,s:"5:20",i:"6:34"},
-  {d:"2026-03-13",n:24,s:"5:18",i:"6:35"},
-  {d:"2026-03-14",n:25,s:"5:16",i:"6:36"},
-  {d:"2026-03-15",n:26,s:"5:14",i:"6:37"},
-  {d:"2026-03-16",n:27,s:"5:13",i:"6:38"},
-  {d:"2026-03-17",n:28,s:"5:11",i:"6:39"},
-  {d:"2026-03-18",n:29,s:"5:09",i:"6:40"},
-  {d:"2026-03-19",n:30,s:"5:07",i:"6:41"}
+  {d:"2026-02-18",n:1,s:"5:51",i:"6:13"},{d:"2026-02-19",n:2,s:"5:50",i:"6:14"},
+  {d:"2026-02-20",n:3,s:"5:49",i:"6:15"},{d:"2026-02-21",n:4,s:"5:48",i:"6:16"},
+  {d:"2026-02-22",n:5,s:"5:47",i:"6:17"},{d:"2026-02-23",n:6,s:"5:46",i:"6:18"},
+  {d:"2026-02-24",n:7,s:"5:44",i:"6:19"},{d:"2026-02-25",n:8,s:"5:43",i:"6:20"},
+  {d:"2026-02-26",n:9,s:"5:42",i:"6:21"},{d:"2026-02-27",n:10,s:"5:40",i:"6:22"},
+  {d:"2026-02-28",n:11,s:"5:39",i:"6:23"},{d:"2026-03-01",n:12,s:"5:38",i:"6:24"},
+  {d:"2026-03-02",n:13,s:"5:36",i:"6:25"},{d:"2026-03-03",n:14,s:"5:35",i:"6:26"},
+  {d:"2026-03-04",n:15,s:"5:33",i:"6:27"},{d:"2026-03-05",n:16,s:"5:32",i:"6:28"},
+  {d:"2026-03-06",n:17,s:"5:30",i:"6:29"},{d:"2026-03-07",n:18,s:"5:28",i:"6:30"},
+  {d:"2026-03-08",n:19,s:"5:27",i:"6:31"},{d:"2026-03-09",n:20,s:"5:25",i:"6:32"},
+  {d:"2026-03-10",n:21,s:"5:23",i:"6:33"},{d:"2026-03-11",n:22,s:"5:22",i:"6:34"},
+  {d:"2026-03-12",n:23,s:"5:20",i:"6:34"},{d:"2026-03-13",n:24,s:"5:18",i:"6:35"},
+  {d:"2026-03-14",n:25,s:"5:16",i:"6:36"},{d:"2026-03-15",n:26,s:"5:14",i:"6:37"},
+  {d:"2026-03-16",n:27,s:"5:13",i:"6:38"},{d:"2026-03-17",n:28,s:"5:11",i:"6:39"},
+  {d:"2026-03-18",n:29,s:"5:09",i:"6:40"},{d:"2026-03-19",n:30,s:"5:07",i:"6:41"}
 ];
 
 var ITEMS=[
@@ -298,17 +486,104 @@ var ITEMS=[
   {id:"sadaqah",l:"Sadaqah / act of kindness",m:"Daily"}
 ];
 
+var HADITHS=[
+  {t:"\"The best of you are those who learn the Quran and teach it.\"",s:"Sahih al-Bukhari 5027"},
+  {t:"\"When Ramadan enters, the gates of Paradise are opened, the gates of Hellfire are closed, and the devils are chained.\"",s:"Sahih al-Bukhari 1899"},
+  {t:"\"Whoever fasts during Ramadan out of sincere faith and hoping to attain Allah's rewards, then all his past sins will be forgiven.\"",s:"Sahih al-Bukhari 38"},
+  {t:"\"The fasting person has two moments of joy: one when he breaks his fast and one when he meets his Lord.\"",s:"Sahih al-Bukhari 1904"},
+  {t:"\"Whoever prays during the nights of Ramadan out of sincere faith and hoping to attain Allah's rewards, all his past sins will be forgiven.\"",s:"Sahih al-Bukhari 37"},
+  {t:"\"Allah said: Every deed of the son of Adam is for him except fasting; it is for Me and I shall reward for it.\"",s:"Sahih al-Bukhari 7492"},
+  {t:"\"There is a gate in Paradise called Ar-Rayyan through which the people who used to fast will enter on the Day of Resurrection.\"",s:"Sahih al-Bukhari 1896"},
+  {t:"\"Charity does not decrease wealth, no one forgives another except that Allah increases his honor, and no one humbles himself for the sake of Allah except that Allah raises his status.\"",s:"Sahih Muslim 2588"},
+  {t:"\"The strong man is not the one who can overpower others. The strong man is the one who controls himself when he gets angry.\"",s:"Sahih al-Bukhari 6114"},
+  {t:"\"Make things easy and do not make them difficult, cheer people up and do not drive them away.\"",s:"Sahih al-Bukhari 69"},
+  {t:"\"None of you truly believes until he loves for his brother what he loves for himself.\"",s:"Sahih al-Bukhari 13"},
+  {t:"\"The best of people are those who are most beneficial to people.\"",s:"Al-Mu'jam al-Awsat 5787"},
+  {t:"\"A smile in your brother's face is charity.\"",s:"Jami at-Tirmidhi 1956"},
+  {t:"\"Seek Laylat al-Qadr in the odd nights of the last ten days of Ramadan.\"",s:"Sahih al-Bukhari 2017"},
+  {t:"\"Whoever gives food for a fasting person to break his fast, he will have a reward like his, without that detracting from the fasting person's reward in the slightest.\"",s:"Jami at-Tirmidhi 807"},
+  {t:"\"The month of Ramadan in which was revealed the Quran, a guidance for the people and clear proofs of guidance and criterion.\"",s:"Quran 2:185"},
+  {t:"\"And when My servants ask you concerning Me — indeed I am near. I respond to the invocation of the supplicant when he calls upon Me.\"",s:"Quran 2:186"},
+  {t:"\"Indeed, Allah will not change the condition of a people until they change what is in themselves.\"",s:"Quran 13:11"},
+  {t:"\"And whoever relies upon Allah — then He is sufficient for him. Indeed, Allah will accomplish His purpose.\"",s:"Quran 65:3"},
+  {t:"\"So remember Me; I will remember you. And be grateful to Me and do not deny Me.\"",s:"Quran 2:152"}
+];
+
+var DUAS={
+  fasting:[
+    {t:"Suhoor Niyyah",ar:"وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ",tr:"Wa bisawmi ghadin nawaitu min shahri Ramadan",en:"I intend to keep the fast tomorrow in the month of Ramadan."},
+    {t:"Iftar Du'a",ar:"اللَّهُمَّ اِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",tr:"Allahumma inni laka sumtu wa bika amantu wa 'alaika tawakkaltu wa 'ala rizqika aftartu",en:"O Allah, I fasted for You, I believe in You, I put my trust in You, and I break my fast with Your sustenance."},
+    {t:"Iftar Du'a (short)",ar:"ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّه",tr:"Dhahaba al-zama' wabtallatil 'urooq wa thabata al-ajr insha'Allah",en:"The thirst has gone, the veins are moistened, and the reward is confirmed, if Allah wills."},
+    {t:"Seeing the New Moon",ar:"اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالأَمْنِ وَالإِيمَانِ وَالسَّلاَمَةِ وَالإِسْلاَمِ",tr:"Allahumma ahillahu 'alayna bil-amni wal-iman was-salamati wal-Islam",en:"O Allah, bring this moon over us with security, faith, safety and Islam."}
+  ],
+  prayer:[
+    {t:"Before Prayer (Iqama)",ar:"اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ وَالصَّلاَةِ الْقَائِمَةِ",tr:"Allahumma Rabba hadhihi-d-da'wat-it-tammati was-salatil qa'imah",en:"O Allah, Lord of this perfect call and established prayer."},
+    {t:"After Prayer",ar:"سُبْحَانَ اللَّهِ ، وَالْحَمْدُ لِلَّهِ ، وَاللَّهُ أَكْبَرُ",tr:"SubhanAllahi, walhamdu lillahi, wallahu Akbar",en:"Glory be to Allah, Praise be to Allah, Allah is the Greatest. (33× each)"},
+    {t:"Ayat al-Kursi",ar:"اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",tr:"Allahu la ilaha illa Huwal-Hayyul-Qayyum, la ta'khudhuhu sinatun wala nawm",en:"Allah — there is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep."},
+    {t:"Dua al-Qunoot",ar:"اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ وَعَافِنِي فِيمَنْ عَافَيْتَ",tr:"Allahumma-hdini fiman hadayt, wa 'afini fiman 'afayt",en:"O Allah, guide me among those You have guided, and grant me well-being among those You have granted well-being."},
+    {t:"Taraweeh Du'a",ar:"سُبْحَانَ ذِي الْمُلْكِ وَالْمَلَكُوتِ",tr:"Subhana dhil-mulki wal-malakut",en:"Glory be to the Possessor of dominion and sovereignty."}
+  ],
+  morning:[
+    {t:"Morning Adhkar",ar:"أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ",tr:"Asbahna wa asbahal mulku lillah, walhamdu lillah",en:"We have entered the morning and with it all dominion belongs to Allah, and praise be to Allah."},
+    {t:"Protection Morning",ar:"بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ",tr:"Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'",en:"In the name of Allah with Whose name nothing can cause harm on earth or in heaven."},
+    {t:"Sayyid al-Istighfar",ar:"اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ",tr:"Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduk",en:"O Allah, You are my Lord, none has the right to be worshipped except You. You created me and I am your servant."},
+    {t:"Du'a for Good Day",ar:"اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ فَتْحَهُ وَنَصْرَهُ",tr:"Allahumma inni as'aluka khayra hadhal-yawm, fathahu wa nasrahu",en:"O Allah, I ask You for the good of this day, its opening, its victory and its light."}
+  ],
+  evening:[
+    {t:"Evening Adhkar",ar:"أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ",tr:"Amsayna wa amsal-mulku lillah, walhamdu lillah",en:"We have entered the evening and with it all dominion belongs to Allah, and praise be to Allah."},
+    {t:"Evening Protection",ar:"أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",tr:"A'udhu bikalimatillahit-tammati min sharri ma khalaq",en:"I seek refuge in the perfect words of Allah from the evil of what He has created."},
+    {t:"Before Sleep",ar:"بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",tr:"Bismika Allahumma amootu wa ahya",en:"In Your name O Allah, I die and I live."},
+    {t:"Ayat al-Kursi (night)",ar:"اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",tr:"Allahu la ilaha illa Huwal-Hayyul-Qayyum",en:"Recite before sleep for protection all night — reported in Sahih al-Bukhari."}
+  ],
+  laylatul:[
+    {t:"Laylatul Qadr Du'a",ar:"اللَّهُمَّ إِنَّكَ عُفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",tr:"Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni",en:"O Allah, You are Pardoning and You love pardon, so pardon me."},
+    {t:"Du'a for Forgiveness",ar:"رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",tr:"Rabbi-ghfir li wa tub 'alayya innaka antat-Tawwabur-Rahim",en:"My Lord, forgive me and accept my repentance. Indeed You are the Accepting of Repentance, the Merciful."},
+    {t:"Seeking Mercy",ar:"رَبَّنَا آمَنَّا فَاغْفِرْ لَنَا وَارْحَمْنَا وَأَنتَ خَيْرُ الرَّاحِمِينَ",tr:"Rabbana amanna faghfir lana warhamna wa anta khayrur-rahimin",en:"Our Lord, we have believed, so forgive us and have mercy upon us, and You are the best of the merciful."},
+    {t:"Du'a on Laylatul Qadr",ar:"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ",tr:"Allahumma inni as'alukal-'afwa wal-'afiyata fid-dunya wal-akhirah",en:"O Allah, I ask You for pardon and well-being in this world and in the Hereafter."},
+    {t:"Tahajjud Opening",ar:"اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ نُورُ السَّمَاوَاتِ وَالأَرْضِ",tr:"Allahumma lakal-hamd, anta nurus-samawati wal-ard",en:"O Allah, praise be to You. You are the Light of the heavens and the earth."}
+  ],
+  dua:[
+    {t:"Du'a for Parents",ar:"رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا",tr:"Rabbi irhamhuma kama rabbayani saghira",en:"My Lord, have mercy upon them as they brought me up when I was small."},
+    {t:"Du'a for Family",ar:"رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ",tr:"Rabbana hab lana min azwajina wa dhurriyyatina qurrata a'yun",en:"Our Lord, grant us from among our spouses and offspring comfort to our eyes."},
+    {t:"Du'a for a New Baby",ar:"بَارَكَ اللَّهُ لَكَ فِي الْمَوْهُوبِ لَكَ وَشَكَرْتَ الْوَاهِبَ",tr:"Baraka Allahu laka fil-mawhubi laka wa shakarta al-wahib",en:"May Allah bless you with what He has gifted you, and may you give thanks to the Giver."},
+    {t:"Du'a for Rizq",ar:"اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",tr:"Allahumma-kfini bihalalaika 'an haramik wa aghnini bifadlika 'amman siwak",en:"O Allah, suffice me with what You have made lawful against what You have made unlawful, and make me independent of all those besides You."},
+    {t:"Du'a for Health",ar:"اللَّهُمَّ عَافِنِي فِي بَدَنِي اللَّهُمَّ عَافِنِي فِي سَمْعِي",tr:"Allahumma 'afini fi badani, Allahumma 'afini fi sam'i",en:"O Allah, grant me health in my body. O Allah, grant me health in my hearing."},
+    {t:"Du'a for Knowledge",ar:"رَّبِّ زِدْنِي عِلْمًا",tr:"Rabbi zidni 'ilma",en:"My Lord, increase me in knowledge."},
+    {t:"Du'a for Success",ar:"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",tr:"Rabbana atina fid-dunya hasanah, wa fil-akhirati hasanah, wa qina 'adhaban-nar",en:"Our Lord, give us in this world good and in the Hereafter good, and protect us from the punishment of the Fire."},
+    {t:"Du'a for Anxiety",ar:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ",tr:"Allahumma inni a'udhu bika minal-hammi wal-hazan",en:"O Allah, I seek refuge in You from worry and grief."}
+  ]
+};
+
+var TASBIH_PHRASES=[
+  {ar:"سُبْحَانَ اللَّهِ",en:"SubhanAllah",key:"sub"},
+  {ar:"الْحَمْدُ لِلَّهِ",en:"Alhamdulillah",key:"ham"},
+  {ar:"اللَّهُ أَكْبَرُ",en:"Allahu Akbar",key:"akb"},
+  {ar:"لَا إِلَٰهَ إِلَّا اللَّهُ",en:"La ilaha illAllah",key:"laa"},
+  {ar:"أَسْتَغْفِرُ اللَّهَ",en:"Astaghfirullah",key:"ast"}
+];
+
+var MEAL_TEMPLATES={
+  suhoor:["Oats with dates & banana","Eggs & whole wheat toast","Greek yogurt + honey + nuts","Ful medames (fava beans)","Smoothie with protein"],
+  iftar:["Dates & water (break fast)","Harira soup","Chicken & rice","Lentil soup","Lamb stew with bread"],
+  snack:["Fresh fruits","Mixed nuts","Hummus & vegetables","Date balls","Yogurt parfait"]
+};
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
 function today(){
   var d=new Date();
-  var y=d.getFullYear();
-  var m=String(d.getMonth()+1).padStart(2,'0');
-  var day=String(d.getDate()).padStart(2,'0');
-  return y+'-'+m+'-'+day;
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 function mins(t){var p=t.split(':');return+p[0]*60+ +p[1];}
 function fmt(t){var p=t.split(':');var h=+p[0];var m=p[1];var hh=h>12?h-12:(h===0?12:h);return hh+':'+m;}
 function mday(s){var p=s.split('-');var mo=['','Jan','Feb','Mar'];return mo[+p[1]]+' '+(+p[2]);}
+function ls(k,def){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v):def;}catch(e){return def;}}
+function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
+// ═══════════════════════════════════════════
+// HEADER & TIMES
+// ═══════════════════════════════════════════
 function initHeader(){
   var td=today();
   var e=SCHED.find(function(r){return r.d===td;});
@@ -332,23 +607,92 @@ function initHeader(){
   } else if(td<SCHED[0].d){
     badge.textContent='Ramadan Starts Tomorrow!';
     var f=SCHED[0];
-    st.textContent=fmt(f.s);
-    it.textContent=fmt(f.i);
-    var diff2=mins(f.i)-mins(f.s);
-    dv.textContent=Math.floor(diff2/60)+'h '+diff2%60+'m';
-    dt.textContent='first fast';
+    st.textContent=fmt(f.s);it.textContent=fmt(f.i);
+    var d2=mins(f.i)-mins(f.s);
+    dv.textContent=Math.floor(d2/60)+'h '+d2%60+'m';dt.textContent='first fast';
     pd.textContent='0';
   } else {
     badge.textContent='Eid Mubarak! 🎉';
-    st.textContent='—'; it.textContent='—';
-    dv.textContent='Complete!'; dt.textContent='';
-    pd.textContent='30'; pf.style.width='100%';
+    st.textContent='—';it.textContent='—';dv.textContent='Complete!';dt.textContent='';
+    pd.textContent='30';pf.style.width='100%';
   }
 }
 
+// ═══════════════════════════════════════════
+// EID COUNTDOWN
+// ═══════════════════════════════════════════
+function updateCountdown(){
+  var eid=new Date('2026-03-20T06:00:00');
+  var now=new Date();
+  var diff=eid-now;
+  if(diff<=0){
+    document.getElementById('eD').textContent='🎉';
+    document.getElementById('eH').textContent='Eid';
+    document.getElementById('eM').textContent='Mubarak';
+    document.getElementById('eS').textContent='!';
+    return;
+  }
+  var days=Math.floor(diff/86400000);
+  var hrs=Math.floor((diff%86400000)/3600000);
+  var mns=Math.floor((diff%3600000)/60000);
+  var scs=Math.floor((diff%60000)/1000);
+  document.getElementById('eD').textContent=days;
+  document.getElementById('eH').textContent=hrs;
+  document.getElementById('eM').textContent=mns;
+  document.getElementById('eS').textContent=scs;
+}
+
+// ═══════════════════════════════════════════
+// LAST 10 NIGHTS
+// ═══════════════════════════════════════════
+function buildL10(){
+  var nights=[
+    {ram:21,mar:10},{ram:22,mar:11,qadr:true},{ram:23,mar:12},
+    {ram:24,mar:13,qadr:true},{ram:25,mar:14},{ram:26,mar:15,qadr:true},
+    {ram:27,mar:16},{ram:28,mar:17,qadr:true},{ram:29,mar:18},{ram:30,mar:19,qadr:true}
+  ];
+  var done=ls('l10done',{});
+  var td=today();
+  var html='';
+  nights.forEach(function(n){
+    var d='2026-03-'+String(n.mar).padStart(2,'0');
+    var isDone=done[n.ram]?'done':'';
+    var isQadr=n.qadr?'qadr':'';
+    var isTd=d===td?'today-night':'';
+    html+='<div class="l10-night '+isDone+' '+isQadr+' '+isTd+'" onclick="toggleL10('+n.ram+')">'
+      +'<div class="l10-date">'+n.ram+'</div>'
+      +'<div class="l10-mar">Mar '+n.mar+'</div>'
+      +'<div class="l10-star">'+(n.qadr?'⭐':(isDone?'✅':''))+'</div>'
+      +'</div>';
+  });
+  document.getElementById('l10Grid').innerHTML=html;
+}
+function toggleL10(n){
+  var done=ls('l10done',{});
+  if(done[n])delete done[n];else done[n]=1;
+  lss('l10done',done);buildL10();
+}
+
+// ═══════════════════════════════════════════
+// HADITH
+// ═══════════════════════════════════════════
+var hIdx=ls('hIdx',0);
+function showHadith(){
+  if(hIdx<0)hIdx=0;if(hIdx>=HADITHS.length)hIdx=HADITHS.length-1;
+  var h=HADITHS[hIdx];
+  document.getElementById('hadithText').textContent=h.t;
+  document.getElementById('hadithSrc').textContent='— '+h.s;
+  lss('hIdx',hIdx);
+}
+function nextHadith(){hIdx=(hIdx+1)%HADITHS.length;showHadith();}
+function prevHadith(){hIdx=(hIdx-1+HADITHS.length)%HADITHS.length;showHadith();}
+
+// ═══════════════════════════════════════════
+// CHECKLIST
+// ═══════════════════════════════════════════
 function buildChecklist(){
   var td=today();
-  var saved=JSON.parse(localStorage.getItem('rc_'+td)||'{}');
+  var saved=ls('rc_'+td,{});
   var html='';
   ITEMS.forEach(function(item){
     var done=saved[item.id]?'done':'';
@@ -360,25 +704,50 @@ function buildChecklist(){
   });
   document.getElementById('chklist').innerHTML=html;
 }
-
 function toggleChk(el,id){
   el.classList.toggle('done');
-  var box=el.querySelector('.chk-box');
-  box.textContent=el.classList.contains('done')?'✓':'';
-  var td=today();
-  var saved=JSON.parse(localStorage.getItem('rc_'+td)||'{}');
+  el.querySelector('.chk-box').textContent=el.classList.contains('done')?'✓':'';
+  var saved=ls('rc_'+today(),{});
   saved[id]=el.classList.contains('done');
-  localStorage.setItem('rc_'+td,JSON.stringify(saved));
+  lss('rc_'+today(),saved);
+}
+function resetDay(){lss('rc_'+today(),{});buildChecklist();}
+
+// ═══════════════════════════════════════════
+// DUAS
+// ═══════════════════════════════════════════
+var duaCat='fasting';
+var duaCatLabels={fasting:'🌙 Fasting',prayer:'🕌 Prayer',morning:'🌤 Morning',evening:'🌃 Evening',laylatul:'✨ Laylatul Qadr',dua:"🤲 Du'as"};
+function buildDuaCats(){
+  var html='';
+  Object.keys(duaCatLabels).forEach(function(k){
+    var act=k===duaCat?'active':'';
+    html+='<button class="dua-cat-btn '+act+'" onclick="setDuaCat(\''+k+'\')">'
+      +duaCatLabels[k]+'</button>';
+  });
+  document.getElementById('duaCats').innerHTML=html;
+  buildDuaList();
+}
+function setDuaCat(k){duaCat=k;buildDuaCats();}
+function buildDuaList(){
+  var list=DUAS[duaCat]||[];
+  var html='';
+  list.forEach(function(d){
+    html+='<div class="dua-card">'
+      +'<div class="dua-t">'+d.t+'</div>'
+      +'<div class="dua-ar">'+d.ar+'</div>'
+      +'<div class="dua-tr">'+d.tr+'</div>'
+      +'<div class="dua-en">'+d.en+'</div>'
+      +'</div>';
+  });
+  document.getElementById('duaList').innerHTML=html;
 }
 
-function resetDay(){
-  var td=today();
-  localStorage.removeItem('rc_'+td);
-  buildChecklist();
-}
-
+// ═══════════════════════════════════════════
+// QURAN
+// ═══════════════════════════════════════════
 function buildJuz(){
-  var saved=JSON.parse(localStorage.getItem('rq')||'{}');
+  var saved=ls('rq',{});
   var html='';
   for(var i=1;i<=30;i++){
     var done=saved[i]?'done':'';
@@ -387,23 +756,165 @@ function buildJuz(){
   document.getElementById('juzGrid').innerHTML=html;
   updateQStats();
 }
-
 function toggleJuz(el,n){
   el.classList.toggle('done');
-  var saved=JSON.parse(localStorage.getItem('rq')||'{}');
-  if(el.classList.contains('done')) saved[n]=1; else delete saved[n];
-  localStorage.setItem('rq',JSON.stringify(saved));
-  updateQStats();
+  var saved=ls('rq',{});
+  if(el.classList.contains('done'))saved[n]=1;else delete saved[n];
+  lss('rq',saved);updateQStats();
 }
-
 function updateQStats(){
-  var saved=JSON.parse(localStorage.getItem('rq')||'{}');
-  var done=Object.keys(saved).length;
+  var saved=ls('rq',{});var done=Object.keys(saved).length;
   document.getElementById('qDone').textContent=done;
   document.getElementById('qLeft').textContent=30-done;
   document.getElementById('qPct').textContent=Math.round(done/30*100)+'%';
 }
 
+// ═══════════════════════════════════════════
+// TASBIH
+// ═══════════════════════════════════════════
+var tsbPhrase='sub';
+function buildTasbih(){
+  var html='';
+  TASBIH_PHRASES.forEach(function(p){
+    var act=p.key===tsbPhrase?'active-phrase':'';
+    html+='<button class="tsb-btn '+act+'" onclick="setTsbPhrase(\''+p.key+'\')">'+p.en+'</button>';
+  });
+  document.getElementById('tsbPhrases').innerHTML=html;
+  var phrase=TASBIH_PHRASES.find(function(p){return p.key===tsbPhrase;});
+  document.getElementById('tsbPhrase').textContent=phrase.ar;
+  document.getElementById('tsbEn').textContent=phrase.en;
+  var count=ls('tsb_'+tsbPhrase,0);
+  document.getElementById('tsbCount').textContent=count;
+  buildTsbMs(count);
+}
+function setTsbPhrase(k){tsbPhrase=k;buildTasbih();}
+function tapTasbih(){
+  var count=ls('tsb_'+tsbPhrase,0)+1;
+  lss('tsb_'+tsbPhrase,count);
+  document.getElementById('tsbCount').textContent=count;
+  buildTsbMs(count);
+}
+function buildTsbMs(count){
+  var ms=[33,66,99,100,200,500,1000];
+  var html='';
+  ms.forEach(function(m){
+    var hit=count>=m?'hit':'';
+    html+='<span class="tsb-ms '+hit+'">'+m+'</span>';
+  });
+  document.getElementById('tsbMs').innerHTML=html;
+}
+function resetTasbih(){lss('tsb_'+tsbPhrase,0);buildTasbih();}
+function resetAllTasbih(){
+  TASBIH_PHRASES.forEach(function(p){lss('tsb_'+p.key,0);});
+  buildTasbih();
+}
+
+// ═══════════════════════════════════════════
+// MEALS
+// ═══════════════════════════════════════════
+var mealDay=0;
+function buildMealWeek(){
+  var days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  var ramDays=[];
+  for(var i=0;i<7;i++){
+    var e=SCHED[i];
+    if(e){
+      var p=e.d.split('-');
+      var dt=new Date(+p[0],+p[1]-1,+p[2]);
+      ramDays.push({label:days[dt.getDay()],num:+p[2],idx:i});
+    }
+  }
+  var html='';
+  ramDays.forEach(function(d,i){
+    var act=i===mealDay?'active':'';
+    html+='<div class="meal-day-btn '+act+'" onclick="setMealDay('+i+')">'
+      +'<div class="mdb-d">'+d.label+'</div>'
+      +'<div class="mdb-n">'+d.num+'</div>'
+      +'</div>';
+  });
+  document.getElementById('mealWeek').innerHTML=html;
+  buildMealDay();
+}
+function setMealDay(i){mealDay=i;buildMealWeek();}
+function buildMealDay(){
+  var key='meal_'+mealDay;
+  var meals=ls(key,{suhoor:[],iftar:[],snack:[]});
+  var sections=['suhoor','iftar','snack'];
+  var labels={suhoor:'🌙 Suhoor',iftar:'🌅 Iftar',snack:'🍊 Snacks'};
+  var html='';
+  sections.forEach(function(sec){
+    html+='<div class="meal-section">'
+      +'<div class="meal-sect-t"><span>'+labels[sec]+'</span></div>'
+      +'<div class="meal-input-row">'
+      +'<input class="meal-input" id="mi_'+sec+'" placeholder="Add '+sec+' item..." onkeydown="if(event.key===\'Enter\')addMeal(\''+sec+'\')">'
+      +'<button class="meal-add-btn" onclick="addMeal(\''+sec+'\')">+</button>'
+      +'</div>';
+    meals[sec].forEach(function(item,idx){
+      html+='<div class="meal-item">'
+        +'<div class="meal-item-txt">'+item+'</div>'
+        +'<button class="meal-del" onclick="delMeal(\''+sec+'\','+idx+')">✕</button>'
+        +'</div>';
+    });
+    // Suggestions
+    html+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;">';
+    (MEAL_TEMPLATES[sec]||[]).slice(0,3).forEach(function(s){
+      html+='<span onclick="quickAddMeal(\''+sec+'\',\''+s+'\')" style="font-size:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(240,234,214,.5);padding:5px 9px;border-radius:8px;cursor:pointer;">+'+s+'</span>';
+    });
+    html+='</div></div>';
+  });
+  document.getElementById('mealDayContent').innerHTML=html;
+}
+function addMeal(sec){
+  var inp=document.getElementById('mi_'+sec);
+  var val=inp.value.trim();if(!val)return;
+  var key='meal_'+mealDay;
+  var meals=ls(key,{suhoor:[],iftar:[],snack:[]});
+  meals[sec].push(val);lss(key,meals);inp.value='';buildMealDay();
+}
+function quickAddMeal(sec,val){
+  var key='meal_'+mealDay;
+  var meals=ls(key,{suhoor:[],iftar:[],snack:[]});
+  if(meals[sec].indexOf(val)===-1){meals[sec].push(val);lss(key,meals);buildMealDay();}
+}
+function delMeal(sec,idx){
+  var key='meal_'+mealDay;
+  var meals=ls(key,{suhoor:[],iftar:[],snack:[]});
+  meals[sec].splice(idx,1);lss(key,meals);buildMealDay();
+}
+
+// SHOPPING
+function buildShopList(){
+  var items=ls('shop',[]);
+  var html='';
+  items.forEach(function(item,i){
+    var got=item.got?'got':'';
+    html+='<div class="shop-item '+got+'" onclick="toggleShop('+i+')">'
+      +'<div class="shop-box">'+(item.got?'✓':'')+'</div>'
+      +'<div class="shop-txt">'+item.name+'</div>'
+      +'<button class="shop-del" onclick="event.stopPropagation();delShop('+i+')">✕</button>'
+      +'</div>';
+  });
+  document.getElementById('shopList').innerHTML=html;
+}
+function addShopItem(){
+  var inp=document.getElementById('shopInput');
+  var val=inp.value.trim();if(!val)return;
+  var items=ls('shop',[]);
+  items.push({name:val,got:false});lss('shop',items);inp.value='';buildShopList();
+}
+function toggleShop(i){
+  var items=ls('shop',[]);items[i].got=!items[i].got;lss('shop',items);buildShopList();
+}
+function delShop(i){
+  var items=ls('shop',[]);items.splice(i,1);lss('shop',items);buildShopList();
+}
+function clearGotItems(){
+  var items=ls('shop',[]).filter(function(x){return!x.got;});lss('shop',items);buildShopList();
+}
+
+// ═══════════════════════════════════════════
+// SCHEDULE
+// ═══════════════════════════════════════════
 function buildSchedule(){
   var td=today();
   var html='';
@@ -419,21 +930,99 @@ function buildSchedule(){
   document.getElementById('schedRows').innerHTML=html;
 }
 
+// ═══════════════════════════════════════════
+// ZAKAT
+// ═══════════════════════════════════════════
+function calcZakat(){
+  var cash=parseFloat(document.getElementById('zCash').value)||0;
+  var inv=parseFloat(document.getElementById('zInvest').value)||0;
+  var rent=parseFloat(document.getElementById('zRental').value)||0;
+  var gold=parseFloat(document.getElementById('zGold').value)||0;
+  var biz=parseFloat(document.getElementById('zBiz').value)||0;
+  var debt=parseFloat(document.getElementById('zDebt').value)||0;
+  var total=cash+inv+rent+gold+biz-debt;
+  var nisab=560;
+  var zakat=total>=nisab?total*0.025:0;
+  document.getElementById('zAmount').textContent='$'+zakat.toFixed(2);
+  var note='';
+  if(total<0)note='⚠️ Your debts exceed your assets.';
+  else if(total<nisab)note='✅ Your net zakatable wealth ($'+total.toFixed(0)+') is below the Nisab threshold. Zakat is not due.';
+  else note='📊 Net zakatable wealth: $'+total.toFixed(0)+' · Zakat rate: 2.5%';
+  document.getElementById('zNote').textContent=note;
+}
+
+// ═══════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════
+var notifState=ls('notifState',{});
+function openNotif(){
+  document.getElementById('notifModal').classList.add('open');
+  ['suhoor','iftar','fajr','dhuhr','asr'].forEach(function(k){
+    var t=document.getElementById('tog-'+k);
+    if(t&&notifState[k])t.classList.add('on');
+  });
+}
+function closeNotif(){document.getElementById('notifModal').classList.remove('open');}
+function toggleNotif(k){
+  var t=document.getElementById('tog-'+k);
+  if(Notification&&Notification.permission!=='granted'){
+    Notification.requestPermission().then(function(perm){
+      if(perm==='granted'){notifState[k]=!notifState[k];lss('notifState',notifState);if(notifState[k])t.classList.add('on');else t.classList.remove('on');scheduleNotif(k);}
+    });
+  } else {
+    notifState[k]=!notifState[k];lss('notifState',notifState);
+    if(notifState[k])t.classList.add('on');else t.classList.remove('on');
+    if(notifState[k])scheduleNotif(k);
+  }
+}
+function scheduleNotif(k){
+  var td=today();
+  var e=SCHED.find(function(r){return r.d===td;});
+  if(!e)return;
+  var msgs={
+    suhoor:{title:'🌙 Suhoor Time!',body:'Suhoor ends at '+fmt(e.s)+' AM. Eat now and make your niyyah.'},
+    iftar:{title:'🌅 Iftar Time!',body:'Break your fast now! Iftar is at '+fmt(e.i)+' PM. Allahumma laka sumtu...'},
+    fajr:{title:'🕌 Fajr Prayer',body:'Time for Fajr prayer. Make wudu and pray.'},
+    dhuhr:{title:'🕌 Dhuhr Prayer',body:'It\'s time for Dhuhr prayer.'},
+    asr:{title:'🕌 Asr Prayer',body:'Time for Asr prayer before the sun sets.'}
+  };
+  var m=msgs[k];
+  if(m&&Notification&&Notification.permission==='granted'){
+    setTimeout(function(){new Notification(m.title,{body:m.body,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">☪️</text></svg>'});},1000);
+  }
+}
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+var TABS=['daily','duas','meals','quran','zakat','schedule'];
 function goTab(name){
-  ['daily','quran','schedule','duas'].forEach(function(t){
+  TABS.forEach(function(t){
     document.getElementById('p-'+t).classList.remove('active');
     document.getElementById('nb-'+t).classList.remove('active');
   });
   document.getElementById('p-'+name).classList.add('active');
   document.getElementById('nb-'+name).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  if(name==='schedule') buildSchedule();
+  if(name==='schedule')buildSchedule();
+  if(name==='meals'){buildMealWeek();buildShopList();}
+  if(name==='duas')buildDuaCats();
+  if(name==='quran')buildJuz();
 }
 
-// Boot
+// ═══════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════
 initHeader();
+updateCountdown();
+setInterval(updateCountdown,1000);
+buildL10();
+showHadith();
 buildChecklist();
+buildDuaCats();
 buildJuz();
+buildTasbih();
+calcZakat();
 </script>
 
 </body>
