@@ -1,0 +1,334 @@
+import { useState, useEffect } from "react";
+
+const SCHEDULE = [
+  {date:"2026-02-18",day:1,suhoor:"5:51",iftar:"6:13"},
+  {date:"2026-02-19",day:2,suhoor:"5:50",iftar:"6:14"},
+  {date:"2026-02-20",day:3,suhoor:"5:49",iftar:"6:15"},
+  {date:"2026-02-21",day:4,suhoor:"5:48",iftar:"6:16"},
+  {date:"2026-02-22",day:5,suhoor:"5:47",iftar:"6:17"},
+  {date:"2026-02-23",day:6,suhoor:"5:46",iftar:"6:18"},
+  {date:"2026-02-24",day:7,suhoor:"5:44",iftar:"6:19"},
+  {date:"2026-02-25",day:8,suhoor:"5:43",iftar:"6:20"},
+  {date:"2026-02-26",day:9,suhoor:"5:42",iftar:"6:21"},
+  {date:"2026-02-27",day:10,suhoor:"5:40",iftar:"6:22"},
+  {date:"2026-02-28",day:11,suhoor:"5:39",iftar:"6:23"},
+  {date:"2026-03-01",day:12,suhoor:"5:38",iftar:"6:24"},
+  {date:"2026-03-02",day:13,suhoor:"5:36",iftar:"6:25"},
+  {date:"2026-03-03",day:14,suhoor:"5:35",iftar:"6:26"},
+  {date:"2026-03-04",day:15,suhoor:"5:33",iftar:"6:27"},
+  {date:"2026-03-05",day:16,suhoor:"5:32",iftar:"6:28"},
+  {date:"2026-03-06",day:17,suhoor:"5:30",iftar:"6:29"},
+  {date:"2026-03-07",day:18,suhoor:"5:28",iftar:"6:30"},
+  {date:"2026-03-08",day:19,suhoor:"5:27",iftar:"6:31"},
+  {date:"2026-03-09",day:20,suhoor:"5:25",iftar:"6:32"},
+  {date:"2026-03-10",day:21,suhoor:"5:23",iftar:"6:33"},
+  {date:"2026-03-11",day:22,suhoor:"5:22",iftar:"6:34"},
+  {date:"2026-03-12",day:23,suhoor:"5:20",iftar:"6:34"},
+  {date:"2026-03-13",day:24,suhoor:"5:18",iftar:"6:35"},
+  {date:"2026-03-14",day:25,suhoor:"5:16",iftar:"6:36"},
+  {date:"2026-03-15",day:26,suhoor:"5:14",iftar:"6:37"},
+  {date:"2026-03-16",day:27,suhoor:"5:13",iftar:"6:38"},
+  {date:"2026-03-17",day:28,suhoor:"5:11",iftar:"6:39"},
+  {date:"2026-03-18",day:29,suhoor:"5:09",iftar:"6:40"},
+  {date:"2026-03-19",day:30,suhoor:"5:07",iftar:"6:41"},
+];
+
+const CHECKLIST_ITEMS = [
+  {id:"suhoor",label:"Suhoor eaten",meta:"Pre-dawn"},
+  {id:"fajr",label:"Fajr prayer",meta:"Obligatory"},
+  {id:"quran-am",label:"Quran — morning reading",meta:"½ Juz"},
+  {id:"dhuhr",label:"Dhuhr prayer",meta:"Obligatory"},
+  {id:"asr",label:"Asr prayer",meta:"Obligatory"},
+  {id:"iftar-dua",label:"Iftar du'a recited",meta:"At sunset"},
+  {id:"maghrib",label:"Maghrib prayer",meta:"Obligatory"},
+  {id:"quran-pm",label:"Quran — evening reading",meta:"½ Juz"},
+  {id:"isha",label:"Isha prayer",meta:"Obligatory"},
+  {id:"taraweeh",label:"Taraweeh prayers",meta:"Sunnah"},
+  {id:"dhikr",label:"Dhikr / Istighfar",meta:"100×"},
+  {id:"sadaqah",label:"Sadaqah / act of kindness",meta:"Daily"},
+];
+
+function todayStr() {
+  return new Date().toISOString().split("T")[0];
+}
+function toMins(t) {
+  const [h,m] = t.split(":").map(Number);
+  return h*60+m;
+}
+function fastDur(s,i) {
+  const d = toMins(i)-toMins(s);
+  return `${Math.floor(d/60)}h ${d%60}m`;
+}
+function fmt(t) {
+  const [h,m] = t.split(":").map(Number);
+  const hh = h>12?h-12:(h===0?12:h);
+  return `${hh}:${String(m).padStart(2,"0")}`;
+}
+function mday(d) {
+  const [,mo,dy] = d.split("-");
+  return `${["","Jan","Feb","Mar"][+mo]} ${+dy}`;
+}
+
+const styles = {
+  wrap: {background:"#0A0D1A",minHeight:"100vh",color:"#F0EAD6",fontFamily:"'DM Mono', 'Courier New', monospace",maxWidth:430,margin:"0 auto",padding:"0 16px 40px"},
+  header: {padding:"40px 0 20px",textAlign:"center",borderBottom:"1px solid rgba(201,168,76,0.18)",marginBottom:20},
+  moon: {fontSize:"2rem",display:"block",marginBottom:8},
+  arabicTitle: {fontFamily:"Georgia, serif",fontSize:"2rem",color:"#C9A84C",lineHeight:1.2},
+  subtitle: {fontSize:"0.6rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"rgba(240,234,214,0.45)",marginTop:4},
+  badge: {display:"inline-block",marginTop:12,background:"linear-gradient(135deg,#C9A84C,#E8C97A)",color:"#0A0D1A",fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.1em",padding:"5px 16px",borderRadius:20},
+  card: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:20,padding:18,marginBottom:14,position:"relative"},
+  cardAccent: {position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,#C9A84C,transparent)",borderRadius:"20px 20px 0 0"},
+  timesRow: {display:"grid",gridTemplateColumns:"1fr 1fr",gap:12},
+  timeBlock: {textAlign:"center",padding:"14px 8px",background:"rgba(255,255,255,0.03)",borderRadius:14,border:"1px solid rgba(255,255,255,0.06)"},
+  timeIcon: {fontSize:"1.3rem",marginBottom:4},
+  timeLabel: {fontSize:"0.5rem",letterSpacing:"0.18em",textTransform:"uppercase",color:"rgba(240,234,214,0.45)",marginBottom:6},
+  timeVal: {fontFamily:"Georgia, serif",fontSize:"1.8rem",color:"#E8C97A",lineHeight:1},
+  timeSub: {fontSize:"0.5rem",color:"rgba(240,234,214,0.45)",marginTop:4},
+  dur: {textAlign:"center",marginTop:14,paddingTop:14,borderTop:"1px solid rgba(201,168,76,0.18)",fontSize:"0.58rem",letterSpacing:"0.1em",textTransform:"uppercase",color:"rgba(240,234,214,0.45)"},
+  durSpan: {color:"#C9A84C",fontSize:"0.85rem"},
+  progCard: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:16,padding:"14px 18px",marginBottom:14},
+  progHeader: {display:"flex",justifyContent:"space-between",fontSize:"0.58rem",letterSpacing:"0.12em",textTransform:"uppercase",color:"rgba(240,234,214,0.45)",marginBottom:10},
+  progTrack: {background:"rgba(255,255,255,0.06)",borderRadius:8,height:8,overflow:"hidden"},
+  progFill: {height:"100%",background:"linear-gradient(90deg,#C9A84C,#E8C97A)",borderRadius:8,transition:"width 0.8s ease"},
+  markers: {display:"flex",justifyContent:"space-between",marginTop:6,fontSize:"0.48rem",color:"rgba(240,234,214,0.4)"},
+  tabNav: {display:"flex",gap:6,marginBottom:14,background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:14,padding:5},
+  tabBtn: {flex:1,background:"none",border:"none",color:"rgba(240,234,214,0.45)",fontFamily:"inherit",fontSize:"0.55rem",letterSpacing:"0.1em",textTransform:"uppercase",padding:"9px 2px",borderRadius:10,cursor:"pointer"},
+  tabBtnActive: {background:"linear-gradient(135deg,rgba(201,168,76,0.2),rgba(232,201,122,0.1))",color:"#E8C97A",border:"1px solid rgba(201,168,76,0.3)"},
+  sectionLabel: {fontSize:"0.52rem",letterSpacing:"0.15em",textTransform:"uppercase",color:"rgba(240,234,214,0.4)",marginBottom:10,paddingLeft:4},
+  checkItem: {display:"flex",alignItems:"center",gap:12,background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:14,padding:"12px 14px",cursor:"pointer",marginBottom:8,transition:"all 0.2s"},
+  checkItemDone: {background:"rgba(76,175,122,0.07)",border:"1px solid rgba(76,175,122,0.25)"},
+  checkBox: {width:22,height:22,borderRadius:7,border:"1.5px solid rgba(201,168,76,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:"0.75rem"},
+  checkBoxDone: {background:"#4CAF7A",border:"1.5px solid #4CAF7A",color:"white"},
+  checkLabel: {fontSize:"0.68rem",letterSpacing:"0.03em"},
+  checkLabelDone: {color:"rgba(240,234,214,0.4)",textDecoration:"line-through"},
+  checkMeta: {marginLeft:"auto",fontSize:"0.52rem",color:"rgba(240,234,214,0.4)",flexShrink:0},
+  resetBtn: {width:"100%",marginTop:8,background:"none",border:"1px solid rgba(201,168,76,0.18)",borderRadius:10,color:"rgba(240,234,214,0.4)",fontFamily:"inherit",fontSize:"0.58rem",letterSpacing:"0.12em",textTransform:"uppercase",padding:10,cursor:"pointer"},
+  quranGrid: {display:"grid",gridTemplateColumns:"repeat(10,1fr)",gap:4,marginBottom:12},
+  juzCell: {aspectRatio:"1",borderRadius:6,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.5rem",color:"rgba(240,234,214,0.45)",cursor:"pointer"},
+  juzCellDone: {background:"linear-gradient(135deg,rgba(201,168,76,0.3),rgba(232,201,122,0.15))",border:"1px solid #C9A84C",color:"#E8C97A"},
+  qStats: {display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12},
+  qStat: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:12,padding:"12px 8px",textAlign:"center"},
+  qStatVal: {fontFamily:"Georgia, serif",fontSize:"1.5rem",color:"#C9A84C",lineHeight:1},
+  qStatLabel: {fontSize:"0.48rem",letterSpacing:"0.1em",textTransform:"uppercase",color:"rgba(240,234,214,0.4)",marginTop:3},
+  hint: {fontSize:"0.58rem",color:"rgba(240,234,214,0.4)",textAlign:"center",letterSpacing:"0.05em"},
+  schedTable: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:16,overflow:"hidden"},
+  schedHead: {display:"grid",gridTemplateColumns:"2fr 1.5fr 1.5fr 1.5fr",padding:"10px 14px",background:"rgba(201,168,76,0.08)",borderBottom:"1px solid rgba(201,168,76,0.18)",fontSize:"0.5rem",letterSpacing:"0.12em",textTransform:"uppercase",color:"rgba(240,234,214,0.45)"},
+  schedRow: {display:"grid",gridTemplateColumns:"2fr 1.5fr 1.5fr 1.5fr",padding:"9px 14px",borderBottom:"1px solid rgba(255,255,255,0.04)",fontSize:"0.6rem",alignItems:"center"},
+  schedRowToday: {background:"rgba(201,168,76,0.1)",borderLeft:"2px solid #C9A84C"},
+  duaCard: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:16,padding:18,marginBottom:10},
+  duaTitle: {fontSize:"0.52rem",letterSpacing:"0.15em",textTransform:"uppercase",color:"#C9A84C",marginBottom:12,textAlign:"center"},
+  duaArabic: {fontFamily:"Georgia, serif",fontSize:"1.2rem",color:"#E8C97A",textAlign:"center",lineHeight:1.8,direction:"rtl",marginBottom:8},
+  duaTrans: {fontSize:"0.6rem",color:"rgba(240,234,214,0.5)",textAlign:"center",fontStyle:"italic",marginBottom:6},
+  duaMeaning: {fontSize:"0.64rem",color:"#F0EAD6",textAlign:"center",lineHeight:1.6},
+  remSection: {background:"#141929",border:"1px solid rgba(201,168,76,0.18)",borderRadius:16,padding:16,marginBottom:10},
+  remTitle: {fontSize:"0.52rem",letterSpacing:"0.15em",textTransform:"uppercase",color:"#C9A84C",marginBottom:10},
+  remItem: {fontSize:"0.63rem",color:"#F0EAD6",display:"flex",alignItems:"flex-start",gap:8,lineHeight:1.6,marginBottom:6},
+  footer: {textAlign:"center",paddingTop:20,fontSize:"0.5rem",letterSpacing:"0.1em",color:"rgba(240,234,214,0.3)",textTransform:"uppercase"},
+};
+
+export default function RamadanApp() {
+  const [tab, setTab] = useState("daily");
+  const [checks, setChecks] = useState({});
+  const [juzDone, setJuzDone] = useState({});
+  const today = todayStr();
+  const entry = SCHEDULE.find(r => r.date === today) || null;
+
+  useEffect(() => {
+    try {
+      const c = JSON.parse(localStorage.getItem("ram_check_"+today)||"{}");
+      setChecks(c);
+      const q = JSON.parse(localStorage.getItem("ram_quran")||"{}");
+      setJuzDone(q);
+    } catch(e) {}
+  }, []);
+
+  function saveChecks(newChecks) {
+    setChecks(newChecks);
+    try { localStorage.setItem("ram_check_"+today, JSON.stringify(newChecks)); } catch(e){}
+  }
+
+  function toggleCheck(id) {
+    const n = {...checks, [id]: !checks[id]};
+    saveChecks(n);
+  }
+
+  function resetDay() { saveChecks({}); }
+
+  function toggleJuz(n) {
+    const nj = {...juzDone};
+    if(nj[n]) delete nj[n]; else nj[n] = true;
+    setJuzDone(nj);
+    try { localStorage.setItem("ram_quran", JSON.stringify(nj)); } catch(e){}
+  }
+
+  const juzCount = Object.keys(juzDone).length;
+
+  let badge, suhoorDisplay, iftarDisplay, durDisplay, dayNum;
+  if (entry) {
+    badge = `Day ${entry.day} of Ramadan`;
+    suhoorDisplay = fmt(entry.suhoor);
+    iftarDisplay = fmt(entry.iftar);
+    durDisplay = fastDur(entry.suhoor, entry.iftar);
+    dayNum = entry.day;
+  } else if (today < SCHEDULE[0].date) {
+    badge = "Ramadan Starts Tomorrow!";
+    suhoorDisplay = fmt(SCHEDULE[0].suhoor);
+    iftarDisplay = fmt(SCHEDULE[0].iftar);
+    durDisplay = fastDur(SCHEDULE[0].suhoor, SCHEDULE[0].iftar);
+    dayNum = 0;
+  } else {
+    badge = "Eid Mubarak! 🌙";
+    suhoorDisplay = "—"; iftarDisplay = "—"; durDisplay = "Ramadan Complete";
+    dayNum = 30;
+  }
+
+  const progPct = Math.round((dayNum/30)*100);
+
+  return (
+    <div style={styles.wrap}>
+      <div style={styles.header}>
+        <span style={styles.moon}>☪️</span>
+        <div style={styles.arabicTitle}>رمضان ١٤٤٧</div>
+        <div style={styles.subtitle}>Ramadan 1447 · Houston, TX</div>
+        <div style={styles.badge}>{badge}</div>
+      </div>
+
+      <div style={styles.card}>
+        <div style={styles.cardAccent}/>
+        <div style={styles.timesRow}>
+          <div style={styles.timeBlock}>
+            <div style={styles.timeIcon}>🌙</div>
+            <div style={styles.timeLabel}>Suhoor Ends</div>
+            <div style={styles.timeVal}>{suhoorDisplay}</div>
+            <div style={styles.timeSub}>AM · Fajr begins</div>
+          </div>
+          <div style={styles.timeBlock}>
+            <div style={styles.timeIcon}>🌅</div>
+            <div style={styles.timeLabel}>Iftar Time</div>
+            <div style={styles.timeVal}>{iftarDisplay}</div>
+            <div style={styles.timeSub}>PM · Maghrib</div>
+          </div>
+        </div>
+        <div style={styles.dur}>
+          <span style={styles.durSpan}>{durDisplay}</span>{entry ? " fasting today" : ""}
+        </div>
+      </div>
+
+      <div style={styles.progCard}>
+        <div style={styles.progHeader}>
+          <span>Ramadan Progress</span>
+          <span><span style={{color:"#C9A84C"}}>{dayNum}</span> / 30 days</span>
+        </div>
+        <div style={styles.progTrack}>
+          <div style={{...styles.progFill, width: progPct+"%"}}/>
+        </div>
+        <div style={styles.markers}>
+          <span>Day 1</span><span>Day 10</span><span>Day 20</span><span>Day 30</span>
+        </div>
+      </div>
+
+      <div style={styles.tabNav}>
+        {["daily","quran","schedule","duas"].map(t => (
+          <button key={t} onClick={()=>setTab(t)}
+            style={{...styles.tabBtn, ...(tab===t?styles.tabBtnActive:{})}}>
+            {t==="daily"?"Daily":t==="quran"?"Qur'an":t==="schedule"?"Schedule":"Du'as"}
+          </button>
+        ))}
+      </div>
+
+      {tab==="daily" && (
+        <div>
+          <div style={styles.sectionLabel}>Today's Ibadah Checklist</div>
+          {CHECKLIST_ITEMS.map(item => {
+            const done = !!checks[item.id];
+            return (
+              <div key={item.id} onClick={()=>toggleCheck(item.id)}
+                style={{...styles.checkItem,...(done?styles.checkItemDone:{})}}>
+                <div style={{...styles.checkBox,...(done?styles.checkBoxDone:{})}}>{done?"✓":""}</div>
+                <div style={{...styles.checkLabel,...(done?styles.checkLabelDone:{})}}>{item.label}</div>
+                <div style={styles.checkMeta}>{item.meta}</div>
+              </div>
+            );
+          })}
+          <button style={styles.resetBtn} onClick={resetDay}>↺ Reset for new day</button>
+        </div>
+      )}
+
+      {tab==="quran" && (
+        <div>
+          <div style={styles.qStats}>
+            <div style={styles.qStat}><div style={styles.qStatVal}>{juzCount}</div><div style={styles.qStatLabel}>Juz Done</div></div>
+            <div style={styles.qStat}><div style={styles.qStatVal}>{30-juzCount}</div><div style={styles.qStatLabel}>Remaining</div></div>
+            <div style={styles.qStat}><div style={styles.qStatVal}>{Math.round(juzCount/30*100)}%</div><div style={styles.qStatLabel}>Complete</div></div>
+          </div>
+          <div style={styles.quranGrid}>
+            {Array.from({length:30},(_,i)=>i+1).map(n=>(
+              <div key={n} onClick={()=>toggleJuz(n)}
+                style={{...styles.juzCell,...(juzDone[n]?styles.juzCellDone:{})}}>{n}</div>
+            ))}
+          </div>
+          <div style={styles.hint}>Tap each Juz to mark complete</div>
+        </div>
+      )}
+
+      {tab==="schedule" && (
+        <div style={styles.schedTable}>
+          <div style={styles.schedHead}>
+            <div>Date</div><div>Day</div><div>Suhoor</div><div>Iftar</div>
+          </div>
+          {SCHEDULE.map(r=>(
+            <div key={r.date} style={{...styles.schedRow,...(r.date===today?styles.schedRowToday:{})}}>
+              <div>{mday(r.date)}</div>
+              <div style={{color:"#C9A84C"}}>Day {r.day}</div>
+              <div style={{color:"#A8D5C0"}}>{fmt(r.suhoor)} AM</div>
+              <div style={{color:"#F5C07A"}}>{fmt(r.iftar)} PM</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab==="duas" && (
+        <div>
+          <div style={styles.duaCard}>
+            <div style={styles.duaTitle}>🌙 Suhoor Niyyah</div>
+            <div style={styles.duaArabic}>وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</div>
+            <div style={styles.duaTrans}>Wa bisawmi ghadin nawaitu min shahri Ramadan</div>
+            <div style={styles.duaMeaning}>"I intend to keep the fast tomorrow in the month of Ramadan."</div>
+          </div>
+          <div style={styles.duaCard}>
+            <div style={styles.duaTitle}>🌅 Iftar Du'a</div>
+            <div style={styles.duaArabic}>اللَّهُمَّ اِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</div>
+            <div style={styles.duaTrans}>Allahumma inni laka sumtu wa bika amantu wa 'alaika tawakkaltu wa 'ala rizqika aftartu</div>
+            <div style={styles.duaMeaning}>"O Allah, I fasted for You, I believe in You, I put my trust in You, and I break my fast with Your sustenance."</div>
+          </div>
+          <div style={styles.duaCard}>
+            <div style={styles.duaTitle}>✨ Laylatul Qadr Du'a</div>
+            <div style={styles.duaArabic}>اللَّهُمَّ إِنَّكَ عُفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</div>
+            <div style={styles.duaTrans}>Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni</div>
+            <div style={styles.duaMeaning}>"O Allah, You are Pardoning and You love pardon, so pardon me."</div>
+          </div>
+          <div style={styles.remSection}>
+            <div style={styles.remTitle}>🍽 Suhoor Meal Ideas</div>
+            {["Oats + dates + banana — slow energy, prevents mid-fast hunger","Eggs + whole wheat toast + avocado — protein-heavy","Greek yogurt + honey + nuts + fruit","Drink 2–3 glasses of water. Avoid salt & caffeine."].map((t,i)=>(
+              <div key={i} style={styles.remItem}><span style={{color:"#C9A84C",flexShrink:0}}>▸</span>{t}</div>
+            ))}
+          </div>
+          <div style={styles.remSection}>
+            <div style={styles.remTitle}>✨ Last 10 Nights — Mar 10–19</div>
+            {["Laylatul Qadr: odd nights — Mar 11, 13, 15, 17, 19","Increase i'tikaf, tahajjud, Quran recitation & du'a","Recite the Laylatul Qadr du'a repeatedly all night","Eid al-Fitr: ~Thursday, March 20, 2026 🎉"].map((t,i)=>(
+              <div key={i} style={styles.remItem}><span style={{color:"#C9A84C",flexShrink:0}}>▸</span>{t}</div>
+            ))}
+          </div>
+          <div style={styles.remSection}>
+            <div style={styles.remTitle}>📲 Add to iPhone Home Screen</div>
+            {["Open this page in Safari (not Chrome)","Tap the Share button (square with arrow ↑)","Scroll down → tap 'Add to Home Screen'","Name it 'Ramadan 🌙' and tap Add"].map((t,i)=>(
+              <div key={i} style={styles.remItem}><span style={{color:"#C9A84C",flexShrink:0}}>{i+1}.</span>{t}</div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div style={styles.footer}>رمضان مبارك · Ahmad · Houston, TX · 1447 AH</div>
+    </div>
+  );
+}
