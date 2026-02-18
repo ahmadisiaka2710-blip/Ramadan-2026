@@ -460,17 +460,23 @@ var USER_CITY='Your Location';
 var USER_LAT=null;
 var USER_LON=null;
 
-// Ramadan 2026 dates
-var RAM_START=new Date('2026-02-18');
+// Ramadan 2026 dates — use local date constructor to avoid UTC offset issues
+var RAM_START=new Date(2026,1,18); // Month is 0-indexed: 1 = February
 var RAM_DAYS=30;
 
 function ramDateStr(dayNum){
-  var d=new Date(RAM_START);
-  d.setDate(d.getDate()+(dayNum-1));
+  var d=new Date(2026,1,17+dayNum); // Feb 18 = index 18, day 1 = Feb 18
   var y=d.getFullYear();
   var m=String(d.getMonth()+1).padStart(2,'0');
   var dd=String(d.getDate()).padStart(2,'0');
   return y+'-'+m+'-'+dd;
+}
+
+// Returns ms until local midnight (cache expires at midnight each day)
+function msUntilMidnight(){
+  var now=new Date();
+  var midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,0);
+  return midnight-now;
 }
 
 // Convert "HH:MM" 24h → "H:MM" for display
@@ -599,8 +605,11 @@ function refreshLocation(){
 function initLocation(){
   // Check cache first
   var cached=ls('cached_sched',null);
-  var SIX_HOURS=6*60*60*1000;
-  if(cached&&cached.sched&&cached.sched.length>0&&(Date.now()-cached.ts)<SIX_HOURS){
+  // Cache expires at local midnight — so day always resets correctly
+  var now=new Date();
+  var cacheDate=cached?new Date(cached.ts):null;
+  var cacheStillToday=cacheDate&&(cacheDate.getFullYear()===now.getFullYear()&&cacheDate.getMonth()===now.getMonth()&&cacheDate.getDate()===now.getDate());
+  if(cached&&cached.sched&&cached.sched.length>0&&cacheStillToday){
     SCHED=cached.sched;
     USER_CITY=cached.city||'Your Location';
     USER_LAT=cached.lat;
@@ -732,7 +741,10 @@ var MEAL_TEMPLATES={
 // ═══════════════════════════════════════════
 function today(){
   var d=new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
 }
 function mins(t){var p=t.split(':');return+p[0]*60+ +p[1];}
 function fmt(t){
